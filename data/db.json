@@ -1,0 +1,112 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Admin User",
+      "email": "admin@daycare.com",
+      "passwordHash": "$2b$10$psuKpdtGmLOc4oDZSRaUz.R7n4ruFic2XxERkdUkZrD3wNMvXX9OS",
+      "role": "admin"
+    },
+    {
+      "id": "u3",
+      "name": "Parent User",
+      "email": "parent@daycare.com",
+      "passwordHash": "$2b$10$B6tnR1y18/KxcxrEq8WhPOkPH/g1w1MUaJk7WWTlAlbSEOG3hXsaS",
+      "role": "parent"
+    },
+    {
+      "id": "pu_1776110277362_evftgbc",
+      "name": "Ifrah Abdi",
+      "email": "ifraha461@gmail.com",
+      "passwordHash": "$2b$10$3RAYAftmeas9hMGjgZ046.v5ARcYn04CGJZD/2HjU8c.3XWMFiLlm",
+      "role": "parent"
+    }
+  ],
+  "children": [
+    {
+      "id": "c1",
+      "name": "Ayaan N.",
+      "age": 4,
+      "classroom": "Sunflower",
+      "parentUserId": ""
+    },
+    {
+      "id": "c2",
+      "name": "Mia K.",
+      "age": 3,
+      "classroom": "Rainbow",
+      "allergies": "Peanuts",
+      "parentUserId": ""
+    },
+    {
+      "id": "c3",
+      "name": "Noah T.",
+      "age": 5,
+      "classroom": "Explorer",
+      "parentUserId": ""
+    },
+    {
+      "id": "c_1776110324215_zbq4t",
+      "name": "Ashraf",
+      "age": 3,
+      "classroom": "Pending assignment",
+      "allergies": "None",
+      "parentUserId": "pu_1776110277362_evftgbc"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "b1776109269233",
+      "parentUserId": "",
+      "parentName": "Parent User",
+      "parentEmail": "parent@daycare.com",
+      "parentPhone": "+254740331354",
+      "childName": "Ashraf",
+      "childAge": "3",
+      "childAllergies": "None",
+      "emergencyContactName": "ifra issack",
+      "emergencyContactPhone": "0740331354",
+      "date": "2026-04-14",
+      "dropOffTime": "23:40",
+      "pickUpTime": "13:40",
+      "programType": "Full day",
+      "notes": "",
+      "paymentMethod": "mpesa",
+      "paymentReference": "",
+      "paymentStatus": "pending_verification",
+      "status": "pending"
+    },
+    {
+      "id": "b1",
+      "parentUserId": "",
+      "parentName": "Fatma Ali",
+      "parentEmail": "",
+      "parentPhone": "",
+      "childName": "Ayaan N.",
+      "childAge": "",
+      "childAllergies": "",
+      "emergencyContactName": "",
+      "emergencyContactPhone": "",
+      "date": "2026-04-14",
+      "dropOffTime": "08:00",
+      "pickUpTime": "16:00",
+      "programType": "Full day",
+      "notes": "",
+      "paymentMethod": "pay_later",
+      "paymentReference": "",
+      "paymentStatus": "unpaid",
+      "status": "approved"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m1",
+      "from": "Teacher Grace",
+      "role": "staff",
+      "message": "Welcome to the upgraded daycare portal.",
+      "sentAt": "2026-04-13T10:39:18.544Z",
+      "threadParentUserId": ""
+    }
+  ],
+  "progress": []
+}

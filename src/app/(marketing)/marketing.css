@@ -1,0 +1,35 @@
+/* Little Roots–inspired marketing theme: soft purples, airy spacing */
+
+:root {
+  --brand-purple: #6d28d9;
+  --brand-purple-dark: #5b21b6;
+  --brand-purple-light: #8b5cf6;
+  --brand-mist: #f5f3ff;
+  --brand-surface: #fafafa;
+}
+
+.marketing-gradient-purple {
+  background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
+}
+
+/* Postage-stamp / playful card edge */
+.stamp-edge {
+  border-radius: 1.25rem;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.95),
+    0 12px 40px -12px rgba(91, 33, 182, 0.45);
+}
+
+@keyframes marketing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.marketing-float {
+  animation: marketing-float 5s ease-in-out infinite;
+}

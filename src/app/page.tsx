@@ -295,10 +295,6 @@ export default async function HomePage() {
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                 Reach out and start your child&apos;s journey with us
               </h2>
-              <p className="mt-5 max-w-lg text-slate-600">
-                We&apos;re in {SITE_LOCATION_FULL}. Call, email, or use the form — we&apos;ll get back to you
-                about programs, schedules, and the parent portal.
-              </p>
               <ul className="mt-6 space-y-3 text-sm text-slate-700">
                 <li>
                   <span className="font-semibold text-slate-900">Address</span>

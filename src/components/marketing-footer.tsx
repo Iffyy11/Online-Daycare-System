@@ -75,10 +75,15 @@ export function MarketingFooter() {
             </div>
           </div>
         </div>
-        <p className="mt-10 border-t border-slate-100 pt-8 text-xs text-slate-500 sm:mt-12">
-          © {new Date().getFullYear()} Daycare Pro demo. Independent project for showcasing daycare
-          operations software.
-        </p>
+        <div className="mt-10 space-y-2 border-t border-slate-100 pt-8 text-xs text-slate-500 sm:mt-12">
+          <p>
+            © {new Date().getFullYear()} Daycare Pro demo. Independent project for showcasing daycare
+            operations software.
+          </p>
+          <p className="text-slate-600">
+            Made by <span className="font-semibold text-violet-800">Ifrah Abdi</span>.
+          </p>
+        </div>
       </div>
     </footer>
   );

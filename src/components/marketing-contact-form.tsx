@@ -13,7 +13,7 @@ export function MarketingContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "ok" | "ok_saved" | "err">("idle");
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus("sending");
@@ -26,7 +26,8 @@ export function MarketingContactForm() {
       setStatus("err");
       return;
     }
-    setStatus("ok");
+    const data = (await res.json()) as { emailDispatched?: boolean };
+    setStatus(data.emailDispatched ? "ok" : "ok_saved");
     setName("");
     setEmail("");
     setMessage("");
@@ -86,7 +87,13 @@ export function MarketingContactForm() {
         </div>
         {status === "ok" ? (
           <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-            Thank you — we&apos;ve received your message and will get back to you soon.
+            Thank you — your message was sent to our inbox and we&apos;ll get back to you soon.
+          </p>
+        ) : null}
+        {status === "ok_saved" ? (
+          <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            Thank you — we received your message. Email delivery is not set up on this server yet; please
+            use the phone or email above if you need a quick reply.
           </p>
         ) : null}
         {status === "err" ? (

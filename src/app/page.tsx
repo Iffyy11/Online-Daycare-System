@@ -86,61 +86,42 @@ export default async function HomePage() {
         >
           <div className="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-violet-200/40 blur-3xl" />
           <div className="pointer-events-none absolute -left-16 bottom-10 h-56 w-56 rounded-full bg-sky-200/35 blur-3xl" />
-          <div className="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-24">
-            <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-violet-700 shadow-sm">
-                {SITE_LOCATION_SHORT} · Kenya
-              </p>
-              <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]">
-                Meet the people helping little ones grow with{" "}
-                <span className="bg-gradient-to-r from-violet-600 to-sky-500 bg-clip-text text-transparent">
-                  confidence
-                </span>
-                .
-              </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
-                Hi — we&apos;re the team behind Daycare Pro: educators and operators who believe warm
-                routines, clear communication, and joyful play belong in every classroom.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <a
-                  href={SITE_PHONE_HREF}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
-                >
-                  Call {SITE_PHONE_DISPLAY}
-                </a>
-                <Link
-                  href="/register"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/80"
-                >
-                  Parent sign up
-                </Link>
-              </div>
-              <p className="mt-6 text-sm text-slate-500">
-                Admin? Use your work email on{" "}
-                <Link href="/login" className="font-medium text-violet-700 underline-offset-2 hover:underline">
-                  Log in
-                </Link>
-                .
-              </p>
+          <div className="relative mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+            <p className="inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-violet-700 shadow-sm">
+              {SITE_LOCATION_SHORT} · Kenya
+            </p>
+            <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]">
+              Meet the people helping little ones grow with{" "}
+              <span className="bg-gradient-to-r from-violet-600 to-sky-500 bg-clip-text text-transparent">
+                confidence
+              </span>
+              .
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+              Hi — we&apos;re the team behind Daycare Pro: educators and operators who believe warm
+              routines, clear communication, and joyful play belong in every classroom.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href={SITE_PHONE_HREF}
+                className="inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
+              >
+                Call {SITE_PHONE_DISPLAY}
+              </a>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/80"
+              >
+                Parent sign up
+              </Link>
             </div>
-            <div className="relative lg:justify-self-end">
-              <div className="marketing-float relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] shadow-[0_32px_64px_-24px_rgba(91,33,182,0.45)] ring-1 ring-violet-100 sm:mx-auto lg:mx-0">
-                <Image
-                  src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=800&q=80"
-                  alt="Educator welcoming children in a bright classroom"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 480px"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-violet-950/25 via-transparent to-transparent" />
-              </div>
-              <div className="absolute -bottom-4 -left-4 hidden rounded-2xl border border-white/80 bg-white/95 p-4 shadow-xl backdrop-blur sm:block lg:-left-8">
-                <p className="text-xs font-semibold uppercase tracking-wide text-violet-600">Today</p>
-                <p className="mt-1 text-sm font-bold text-slate-900">Circle time · Outdoor play · Story</p>
-              </div>
-            </div>
+            <p className="mt-6 text-sm text-slate-500">
+              Admin? Use your work email on{" "}
+              <Link href="/login" className="font-medium text-violet-700 underline-offset-2 hover:underline">
+                Log in
+              </Link>
+              .
+            </p>
           </div>
         </section>
 

@@ -23,17 +23,20 @@ export async function POST(request: Request) {
 
   let emailDispatched = false;
 
-  if (process.env.RESEND_API_KEY) {
+  const resendKey = process.env.RESEND_API_KEY?.trim();
+  if (resendKey) {
     try {
       await sendContactViaResend(parsed.data);
       emailDispatched = true;
     } catch (err) {
       console.error("[contact] Resend failed:", err);
       await appendContactLead({ ...parsed.data, emailDispatched: false });
+      const resendMsg = err instanceof Error ? err.message : String(err);
       return NextResponse.json(
         {
-          error:
-            "Could not send email right now. Check Resend domain and RESEND_FROM, or call us / email directly.",
+          error: resendMsg,
+          hint:
+            "In Resend: Domains must be verified before using noreply@yourdomain.com. For quick tests, unset RESEND_FROM or set it exactly to onboarding@resend.dev and send to an allowed recipient.",
         },
         { status: 502 },
       );

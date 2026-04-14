@@ -24,7 +24,7 @@ function escapeHtml(text: string): string {
  * - `CONTACT_INBOX_EMAIL` — recipient (else `NEXT_PUBLIC_CONTACT_EMAIL`, else site default)
  */
 export async function sendContactViaResend(payload: ContactPayload): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) {
     throw new Error("RESEND_API_KEY is not configured");
   }

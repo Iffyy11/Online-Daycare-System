@@ -24,10 +24,17 @@ export function MarketingContactForm() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message }),
     });
-    const body = (await res.json().catch(() => ({}))) as { error?: string; emailDispatched?: boolean };
+    const body = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      hint?: string;
+      emailDispatched?: boolean;
+    };
     if (!res.ok) {
       setStatus("err");
-      setErrDetail(body.error ?? (res.status === 400 ? "Message must be at least 10 characters." : ""));
+      const base =
+        body.error ?? (res.status === 400 ? "Message must be at least 10 characters." : "");
+      const hint = body.hint ? ` ${body.hint}` : "";
+      setErrDetail((base + hint).trim());
       return;
     }
     const data = body as { emailDispatched?: boolean };
@@ -97,8 +104,16 @@ export function MarketingContactForm() {
         ) : null}
         {status === "ok_saved" ? (
           <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            Thank you — we received your message. Email delivery is not set up on this server yet; please
-            use the phone or email above if you need a quick reply.
+            <span className="font-semibold text-amber-950">Thank you — we received your message.</span>{" "}
+            This deployment is not sending copies by email yet (no{" "}
+            <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_API_KEY</code> on the
+            server). If you are on <strong>Vercel</strong>, open{" "}
+            <strong>Project → Settings → Environment Variables</strong>, add the same keys you use in{" "}
+            <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">.env.local</code> (
+            <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_API_KEY</code>,{" "}
+            <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_FROM</code>, optional{" "}
+            <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">CONTACT_INBOX_EMAIL</code>
+            ), then <strong>Redeploy</strong>. Until then, use the phone or email above for a quick reply.
           </p>
         ) : null}
         {status === "err" ? (

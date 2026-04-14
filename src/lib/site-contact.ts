@@ -1,13 +1,12 @@
 /** Public contact details for the marketing / reach-out sections */
 
-export const SITE_AREA = "Kilimani";
 export const SITE_CITY = "Nairobi";
 export const SITE_COUNTRY = "Kenya";
-export const SITE_LOCATION_SHORT = `${SITE_AREA}, ${SITE_CITY}`;
-export const SITE_LOCATION_FULL = `${SITE_AREA}, ${SITE_CITY}, ${SITE_COUNTRY}`;
+export const SITE_LOCATION_SHORT = SITE_CITY;
+export const SITE_LOCATION_FULL = `${SITE_CITY}, ${SITE_COUNTRY}`;
 
 export const SITE_MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=Kilimani%2C+Nairobi%2C+Kenya";
+  "https://www.google.com/maps/search/?api=1&query=Nairobi%2C+Kenya";
 
 /** Local format as provided */
 export const SITE_PHONE_LOCAL = "0740331354";

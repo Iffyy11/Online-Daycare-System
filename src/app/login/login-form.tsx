@@ -45,7 +45,7 @@ export function LoginForm({ registered }: { registered: boolean }) {
   };
 
   const inputClass =
-    "mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20";
+    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20";
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col justify-center px-4 py-12">
@@ -83,13 +83,13 @@ export function LoginForm({ registered }: { registered: boolean }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-60"
+            className="w-full rounded-full bg-[#6d28d9] py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#5b21b6] disabled:opacity-60"
           >
             {loading ? "Signing in..." : "Continue"}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">
-          <Link href="/" className="font-medium text-indigo-600 hover:text-indigo-800">
+          <Link href="/" className="font-medium text-violet-700 hover:text-violet-900">
             ← Back to website
           </Link>
         </p>

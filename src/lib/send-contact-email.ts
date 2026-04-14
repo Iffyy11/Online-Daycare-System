@@ -31,10 +31,8 @@ export async function sendContactViaResend(payload: ContactPayload): Promise<voi
 
   const resend = new Resend(apiKey);
 
-  const to =
-    process.env.CONTACT_INBOX_EMAIL?.trim() ||
-    process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() ||
-    SITE_PUBLIC_EMAIL;
+  /** Primary inbox for contact form (set CONTACT_INBOX_EMAIL on Vercel to override). */
+  const to = process.env.CONTACT_INBOX_EMAIL?.trim() || SITE_PUBLIC_EMAIL;
 
   const from = process.env.RESEND_FROM?.trim() || "onboarding@resend.dev";
 

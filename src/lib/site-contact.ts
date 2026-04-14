@@ -26,3 +26,11 @@ export const SITE_PUBLIC_EMAIL =
     : "ifraha461@gmail.com";
 
 export const SITE_MAILTO_HREF = `mailto:${SITE_PUBLIC_EMAIL}?subject=${encodeURIComponent("Daycare inquiry")}`;
+
+/** Override with NEXT_PUBLIC_SOCIAL_* in .env — defaults are generic; set URLs to your real profiles. */
+export const SOCIAL_URLS = {
+  instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "https://www.instagram.com/",
+  facebook: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK?.trim() || "https://www.facebook.com/",
+  tiktok: process.env.NEXT_PUBLIC_SOCIAL_TIKTOK?.trim() || "https://www.tiktok.com/",
+  twitter: process.env.NEXT_PUBLIC_SOCIAL_TWITTER?.trim() || "https://twitter.com/",
+} as const;

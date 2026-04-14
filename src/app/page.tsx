@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { MarketingContactForm } from "@/components/marketing-contact-form";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
@@ -12,6 +13,14 @@ import {
   SITE_PHONE_HREF,
   SITE_PUBLIC_EMAIL,
 } from "@/lib/site-contact";
+import { readDb } from "@/lib/db";
+import { PROGRAMS } from "@/lib/programs-data";
+import "./marketing.css";
+
+const marketingSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 function QuoteIcon({ className }: { className?: string }) {
   return (
@@ -58,13 +67,19 @@ const testimonials = [
   },
 ];
 
-export default function MarketingHomePage() {
+export default async function HomePage() {
+  const db = await readDb();
+  const community = [...db.communityFeedback].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
   return (
-    <>
+    <div
+      className={`${marketingSans.className} min-h-screen bg-[var(--brand-surface)] text-slate-900 antialiased`}
+    >
       <MarketingHeader />
 
       <main className="relative overflow-x-hidden">
-        {/* Hero */}
         <section
           id="home"
           className="relative scroll-mt-24 border-b border-violet-100/60 bg-gradient-to-b from-[var(--brand-mist)] via-white to-white"
@@ -129,61 +144,50 @@ export default function MarketingHomePage() {
           </div>
         </section>
 
-        {/* Unique needs */}
-        <section id="programs" className="scroll-mt-24 border-b border-slate-100 py-20 sm:py-24">
+        <section id="programs" className="scroll-mt-24 border-b border-slate-100 py-14 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mx-auto max-w-3xl text-center text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Support every child&apos;s unique needs, including:
+            <h2 className="mx-auto max-w-3xl text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Programs &amp; everyday care
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-slate-600">
-              Thoughtful routines and documentation so every family feels seen — from snacks to sleep.
+            <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-slate-600 sm:text-base">
+              Thoughtful routines for every age — tap a card for full details or{" "}
+              <Link href="/programs" className="font-semibold text-violet-700 underline-offset-2 hover:underline">
+                browse all programs
+              </Link>
+              .
             </p>
-            <div className="mt-14 grid gap-8 lg:grid-cols-2">
-              <article className="group flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_20px_50px_-28px_rgba(15,23,42,0.2)] transition hover:-translate-y-1 hover:shadow-[0_28px_60px_-24px_rgba(109,40,217,0.25)] sm:flex-row">
-                <div className="relative aspect-[4/3] w-full shrink-0 sm:max-w-[240px] sm:aspect-auto sm:min-h-[220px]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=80"
-                    alt="Children enjoying a colorful snack together"
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 240px"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col justify-center p-8">
-                  <h3 className="text-lg font-bold text-violet-800 underline decoration-violet-200 decoration-2 underline-offset-4">
-                    Food allergies &amp; dietary care
-                  </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                    We label, double-check, and partner with families on safe snack options. Substitutions
-                    are planned ahead — never an afterthought.
-                  </p>
-                </div>
-              </article>
-              <article className="group flex flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_20px_50px_-28px_rgba(15,23,42,0.2)] transition hover:-translate-y-1 hover:shadow-[0_28px_60px_-24px_rgba(109,40,217,0.25)] sm:flex-row">
-                <div className="relative aspect-[4/3] w-full shrink-0 sm:max-w-[240px] sm:aspect-auto sm:min-h-[220px]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600&q=80"
-                    alt="Peaceful nap area with soft lighting"
-                    fill
-                    className="object-cover transition duration-500 group-hover:scale-105"
-                    sizes="(max-width: 1024px) 100vw, 240px"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col justify-center p-8">
-                  <h3 className="text-lg font-bold text-violet-800 underline decoration-violet-200 decoration-2 underline-offset-4">
-                    Naps &amp; sleep rhythms
-                  </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                    Cozy spaces, predictable transitions, and flexible schedules that respect how each
-                    child winds down and wakes up.
-                  </p>
-                </div>
-              </article>
-            </div>
+            <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+              {PROGRAMS.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/programs/${p.slug}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <div className="relative aspect-[16/10] w-full shrink-0">
+                      <Image
+                        src={p.image}
+                        alt={p.imageAlt}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-105"
+                        sizes="(max-width: 1024px) 100vw, 33vw"
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col p-4 sm:p-5">
+                      <h3 className="text-base font-bold text-violet-900 sm:text-lg">{p.title}</h3>
+                      <p className="mt-2 line-clamp-3 flex-1 text-xs leading-relaxed text-slate-600 sm:text-sm">
+                        {p.summary}
+                      </p>
+                      <span className="mt-3 text-xs font-semibold text-violet-700 sm:text-sm">
+                        Learn more →
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
-        {/* Concerns strip */}
         <section id="concerns" className="scroll-mt-24 border-b border-slate-100 bg-white py-20 sm:py-24">
           <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
             <div className="order-2 lg:order-1">
@@ -214,8 +218,8 @@ export default function MarketingHomePage() {
                 ))}
               </ul>
               <Link
-                href="#contact"
-                className="mt-10 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
+                href="/#contact"
+                className="mt-10 inline-flex rounded-full bg-[#6d28d9] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
               >
                 Ask us anything
               </Link>
@@ -223,7 +227,6 @@ export default function MarketingHomePage() {
           </div>
         </section>
 
-        {/* Testimonials */}
         <section
           id="testimonials"
           className="marketing-gradient-purple scroll-mt-24 py-20 text-white sm:py-24"
@@ -262,7 +265,46 @@ export default function MarketingHomePage() {
           </div>
         </section>
 
-        {/* Contact */}
+        <section className="border-b border-slate-100 bg-gradient-to-b from-white to-[var(--brand-mist)]/40 py-14 sm:py-20">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <h2 className="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              Voices from our families
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-slate-600 sm:text-base">
+              Parents who are signed in can share feedback from the portal — it appears here for everyone
+              visiting our site.
+            </p>
+            {community.length === 0 ? (
+              <p className="mx-auto mt-10 max-w-md rounded-2xl border border-dashed border-violet-200 bg-violet-50/40 px-4 py-6 text-center text-sm text-slate-600">
+                No community notes yet.{" "}
+                <Link href="/register" className="font-semibold text-violet-800 hover:underline">
+                  Register
+                </Link>{" "}
+                and post from your parent dashboard.
+              </p>
+            ) : (
+              <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {community.slice(0, 9).map((c) => (
+                  <li
+                    key={c.id}
+                    className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm ring-1 ring-violet-50"
+                  >
+                    <p className="text-sm leading-relaxed text-slate-700">&ldquo;{c.content}&rdquo;</p>
+                    <p className="mt-4 text-xs font-semibold text-violet-800">— {c.authorName}</p>
+                    <p className="mt-1 text-xs text-slate-400">
+                      {new Date(c.createdAt).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+
         <section
           id="contact"
           className="scroll-mt-24 border-b border-slate-100 bg-gradient-to-b from-[var(--brand-mist)]/50 to-white py-20 sm:py-24"
@@ -321,7 +363,6 @@ export default function MarketingHomePage() {
           </div>
         </section>
 
-        {/* Final CTA */}
         <section className="py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="rounded-[2rem] border border-violet-100 bg-white p-10 text-center shadow-[0_24px_60px_-30px_rgba(109,40,217,0.35)] sm:p-14">
@@ -352,12 +393,12 @@ export default function MarketingHomePage() {
       <MarketingFooter />
 
       <a
-        href="#contact"
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#6d28d9] text-white shadow-[0_12px_40px_-8px_rgba(91,33,182,0.65)] transition hover:scale-105 hover:bg-[#5b21b6]"
+        href="/#contact"
+        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#6d28d9] text-white shadow-[0_12px_40px_-8px_rgba(91,33,182,0.65)] transition hover:scale-105 hover:bg-[#5b21b6] sm:bottom-8 sm:right-8"
         aria-label="Contact us"
       >
         <ChatBubbleIcon className="h-6 w-6" />
       </a>
-    </>
+    </div>
   );
 }

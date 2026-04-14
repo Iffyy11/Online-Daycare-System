@@ -6,11 +6,13 @@ import {
   Booking,
   ChatMessage,
   Child,
+  CommunityFeedback,
   ProgressCategory,
   ProgressEntry,
   User,
   UserRole,
 } from "@/lib/types";
+import { getMongoDb, isMongoEnabled } from "@/lib/mongo-client";
 
 const PAYMENT_METHODS: Booking["paymentMethod"][] = [
   "card",
@@ -22,6 +24,11 @@ const PAYMENT_METHODS: Booking["paymentMethod"][] = [
 const PAYMENT_STATUSES: Booking["paymentStatus"][] = ["unpaid", "pending_verification", "paid"];
 const BOOKING_STATUSES: Booking["status"][] = ["pending", "approved", "declined"];
 const PROGRESS_CATEGORIES: ProgressCategory[] = ["learning", "social", "wellbeing", "general"];
+
+const SNAPSHOT_ID = "app" as const;
+const SNAPSHOT_COLLECTION = "app_snapshot";
+
+type AppSnapshotDoc = { _id: typeof SNAPSHOT_ID } & AppDatabase;
 
 function normalizeBooking(raw: Record<string, unknown>): Booking {
   const base = raw as Partial<Booking>;
@@ -73,6 +80,17 @@ function normalizeMessage(raw: Record<string, unknown>): ChatMessage {
     message: String(base.message ?? ""),
     sentAt: String(base.sentAt ?? new Date().toISOString()),
     threadParentUserId: String(base.threadParentUserId ?? ""),
+  };
+}
+
+function normalizeCommunityFeedback(raw: Record<string, unknown>): CommunityFeedback {
+  const base = raw as Partial<CommunityFeedback>;
+  return {
+    id: String(base.id ?? ""),
+    authorUserId: String(base.authorUserId ?? ""),
+    authorName: String(base.authorName ?? ""),
+    content: String(base.content ?? ""),
+    createdAt: String(base.createdAt ?? new Date().toISOString()),
   };
 }
 
@@ -155,9 +173,26 @@ const defaultDb: AppDatabase = {
       recordedByName: "Teacher Grace",
     },
   ],
+  communityFeedback: [],
 };
 
-async function ensureDb() {
+function normalizeAppDatabase(data: AppDatabase): AppDatabase {
+  return {
+    users: (data.users ?? []).map((u) => ({
+      ...(u as User),
+      role: normalizeUserRole(String((u as User).role)),
+    })),
+    bookings: (data.bookings ?? []).map((b) => normalizeBooking(b as unknown as Record<string, unknown>)),
+    children: (data.children ?? []).map((c) => normalizeChild(c as unknown as Record<string, unknown>)),
+    messages: (data.messages ?? []).map((m) => normalizeMessage(m as unknown as Record<string, unknown>)),
+    progress: (data.progress ?? []).map((p) => normalizeProgress(p as unknown as Record<string, unknown>)),
+    communityFeedback: (data.communityFeedback ?? []).map((f) =>
+      normalizeCommunityFeedback(f as unknown as Record<string, unknown>),
+    ),
+  };
+}
+
+async function ensureJsonFile() {
   try {
     await fs.access(dbPath);
   } catch {
@@ -166,21 +201,52 @@ async function ensureDb() {
   }
 }
 
-export async function readDb(): Promise<AppDatabase> {
-  await ensureDb();
+async function readJsonDb(): Promise<AppDatabase> {
+  await ensureJsonFile();
   const raw = await fs.readFile(dbPath, "utf-8");
   const data = JSON.parse(raw) as AppDatabase;
-  data.users = (data.users ?? []).map((u) => ({
-    ...(u as User),
-    role: normalizeUserRole(String((u as User).role)),
-  }));
-  data.bookings = data.bookings.map((b) => normalizeBooking(b as unknown as Record<string, unknown>));
-  data.children = (data.children ?? []).map((c) => normalizeChild(c as unknown as Record<string, unknown>));
-  data.messages = (data.messages ?? []).map((m) => normalizeMessage(m as unknown as Record<string, unknown>));
-  data.progress = (data.progress ?? []).map((p) => normalizeProgress(p as unknown as Record<string, unknown>));
-  return data;
+  return normalizeAppDatabase(data);
+}
+
+async function writeJsonDb(data: AppDatabase): Promise<void> {
+  await fs.writeFile(dbPath, JSON.stringify(data, null, 2), "utf-8");
+}
+
+async function readMongoSnapshot(): Promise<AppDatabase> {
+  const mongo = await getMongoDb();
+  const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
+  const doc = await coll.findOne({ _id: SNAPSHOT_ID });
+  if (!doc) {
+    const seed: AppSnapshotDoc = { _id: SNAPSHOT_ID, ...defaultDb };
+    await coll.replaceOne({ _id: SNAPSHOT_ID }, seed, { upsert: true });
+    return normalizeAppDatabase(defaultDb);
+  }
+  const { _id: _ignored, ...rest } = doc;
+  return normalizeAppDatabase(rest as AppDatabase);
+}
+
+async function writeMongoSnapshot(data: AppDatabase): Promise<void> {
+  const mongo = await getMongoDb();
+  const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
+  const doc: AppSnapshotDoc = { _id: SNAPSHOT_ID, ...data };
+  await coll.replaceOne({ _id: SNAPSHOT_ID }, doc, { upsert: true });
+}
+
+/**
+ * Full app state. Uses MongoDB when `MONGODB_URI` is set; otherwise `data/db.json`.
+ */
+export async function readDb(): Promise<AppDatabase> {
+  if (isMongoEnabled()) {
+    return readMongoSnapshot();
+  }
+  return readJsonDb();
 }
 
 export async function writeDb(data: AppDatabase): Promise<void> {
-  await fs.writeFile(dbPath, JSON.stringify(data, null, 2), "utf-8");
+  const normalized = normalizeAppDatabase(data);
+  if (isMongoEnabled()) {
+    await writeMongoSnapshot(normalized);
+    return;
+  }
+  await writeJsonDb(normalized);
 }

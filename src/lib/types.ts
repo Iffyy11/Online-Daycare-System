@@ -76,10 +76,20 @@ export type User = {
   role: UserRole;
 };
 
+/** Short quote from a logged-in parent; shown on the public homepage. */
+export type CommunityFeedback = {
+  id: string;
+  authorUserId: string;
+  authorName: string;
+  content: string;
+  createdAt: string;
+};
+
 export type AppDatabase = {
   users: User[];
   children: Child[];
   bookings: Booking[];
   messages: ChatMessage[];
   progress: ProgressEntry[];
+  communityFeedback: CommunityFeedback[];
 };

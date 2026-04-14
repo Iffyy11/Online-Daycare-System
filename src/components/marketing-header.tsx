@@ -4,10 +4,10 @@ import { getSession } from "@/lib/auth";
 import { SITE_PHONE_DISPLAY, SITE_PHONE_HREF } from "@/lib/site-contact";
 
 const nav = [
-  { href: "#home", label: "Home" },
-  { href: "#programs", label: "Programs" },
-  { href: "#concerns", label: "Common daycare concerns" },
-  { href: "#testimonials", label: "Families" },
+  { href: "/#home", label: "Home" },
+  { href: "/programs", label: "Programs" },
+  { href: "/#concerns", label: "Concerns" },
+  { href: "/#testimonials", label: "Families" },
 ];
 
 function PhoneIcon({ className }: { className?: string }) {
@@ -47,7 +47,7 @@ export async function MarketingHeader() {
             </a>
           ))}
           <a
-            href="#contact"
+            href="/#contact"
             className="rounded-full px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-violet-50 hover:text-violet-900"
           >
             Contact
@@ -69,7 +69,7 @@ export async function MarketingHeader() {
                   {item.label}
                 </a>
               ))}
-              <a href="#contact" className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-violet-50">
+              <a href="/#contact" className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-violet-50">
                 Contact
               </a>
             </div>

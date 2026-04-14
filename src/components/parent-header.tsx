@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/brand-logo";
 import { getSession } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 
@@ -7,18 +8,17 @@ const links = [
   { href: "/parent/my-children", label: "My children" },
   { href: "/parent/bookings", label: "Book care" },
   { href: "/parent/messages", label: "Messages" },
+  { href: "/parent/feedback", label: "Feedback" },
 ];
 
 export async function ParentHeader() {
   const session = await getSession();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-violet-100/90 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <Link href="/parent/dashboard" className="flex items-center gap-2 font-semibold text-slate-900">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-600 text-lg text-white">
-            P
-          </span>
+          <BrandLogo className="h-9 w-9 shrink-0" />
           <span className="hidden sm:inline">Parent portal</span>
         </Link>
         <nav className="order-3 flex w-full flex-wrap gap-1 sm:order-2 sm:w-auto md:gap-1">
@@ -33,7 +33,7 @@ export async function ParentHeader() {
           ))}
         </nav>
         <div className="order-2 flex items-center gap-2 sm:order-3">
-          <Link href="/" className="hidden text-sm text-slate-500 hover:text-slate-800 sm:inline">
+          <Link href="/" className="hidden text-sm text-slate-500 hover:text-violet-800 sm:inline">
             Website
           </Link>
           {session ? (

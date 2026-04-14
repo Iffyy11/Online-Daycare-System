@@ -14,19 +14,23 @@ export function MarketingContactForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "ok_saved" | "err">("idle");
+  const [errDetail, setErrDetail] = useState("");
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus("sending");
+    setErrDetail("");
     const res = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message }),
     });
+    const body = (await res.json().catch(() => ({}))) as { error?: string; emailDispatched?: boolean };
     if (!res.ok) {
       setStatus("err");
+      setErrDetail(body.error ?? (res.status === 400 ? "Message must be at least 10 characters." : ""));
       return;
     }
-    const data = (await res.json()) as { emailDispatched?: boolean };
+    const data = body as { emailDispatched?: boolean };
     setStatus(data.emailDispatched ? "ok" : "ok_saved");
     setName("");
     setEmail("");
@@ -79,10 +83,11 @@ export function MarketingContactForm() {
           />
           <textarea
             className={`${input} min-h-[120px] resize-y`}
-            placeholder="Your message"
+            placeholder="Your message (at least 10 characters)"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             required
+            minLength={10}
           />
         </div>
         {status === "ok" ? (
@@ -98,11 +103,16 @@ export function MarketingContactForm() {
         ) : null}
         {status === "err" ? (
           <p className="mt-4 text-sm text-rose-600">
-            Something went wrong. Please try again, call us, or email{" "}
-            <a href={SITE_MAILTO_HREF} className="font-medium underline">
-              {SITE_PUBLIC_EMAIL}
-            </a>
-            .
+            <span className="block font-medium">
+              {errDetail || "Something went wrong. Please try again."}
+            </span>
+            <span className="mt-2 block">
+              You can also call us or email{" "}
+              <a href={SITE_MAILTO_HREF} className="font-medium underline">
+                {SITE_PUBLIC_EMAIL}
+              </a>
+              .
+            </span>
           </p>
         ) : null}
         <button

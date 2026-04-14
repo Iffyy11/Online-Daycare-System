@@ -12,7 +12,13 @@ const schema = z.object({
 export async function POST(request: Request) {
   const parsed = schema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid message." }, { status: 400 });
+    const first = parsed.error.flatten().fieldErrors;
+    const hint =
+      first.message?.[0] ??
+      first.name?.[0] ??
+      first.email?.[0] ??
+      "Check all fields (message needs at least 10 characters).";
+    return NextResponse.json({ error: hint }, { status: 400 });
   }
 
   let emailDispatched = false;
@@ -25,16 +31,20 @@ export async function POST(request: Request) {
       console.error("[contact] Resend failed:", err);
       await appendContactLead({ ...parsed.data, emailDispatched: false });
       return NextResponse.json(
-        { error: "Could not send email right now. Please call us or try again in a few minutes." },
+        {
+          error:
+            "Could not send email right now. Check Resend domain and RESEND_FROM, or call us / email directly.",
+        },
         { status: 502 },
       );
     }
   }
 
-  await appendContactLead({ ...parsed.data, emailDispatched });
+  const leadSaved = (await appendContactLead({ ...parsed.data, emailDispatched })) !== null;
 
   return NextResponse.json({
     ok: true,
     emailDispatched,
+    leadSaved,
   });
 }

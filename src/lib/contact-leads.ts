@@ -12,9 +12,20 @@ export type ContactLeadRecord = {
 
 const filePath = path.join(process.cwd(), "data", "contact-leads.json");
 
+/**
+ * Appends a contact lead to `data/contact-leads.json` when the filesystem is writable (local dev).
+ * On read-only hosts (e.g. many serverless deployments), logs and returns null — callers should not fail.
+ */
 export async function appendContactLead(
   entry: Pick<ContactLeadRecord, "name" | "email" | "message" | "emailDispatched">,
-): Promise<ContactLeadRecord> {
+): Promise<ContactLeadRecord | null> {
+  try {
+    await fs.mkdir(path.dirname(filePath), { recursive: true });
+  } catch (e) {
+    console.warn("[contact-leads] could not ensure data directory:", e);
+    return null;
+  }
+
   let list: ContactLeadRecord[] = [];
   try {
     const raw = await fs.readFile(filePath, "utf-8");
@@ -36,6 +47,11 @@ export async function appendContactLead(
   };
 
   list.push(record);
-  await fs.writeFile(filePath, JSON.stringify(list, null, 2), "utf-8");
+  try {
+    await fs.writeFile(filePath, JSON.stringify(list, null, 2), "utf-8");
+  } catch (e) {
+    console.warn("[contact-leads] could not write file (common on serverless):", e);
+    return null;
+  }
   return record;
 }

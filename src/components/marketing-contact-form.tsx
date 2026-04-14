@@ -64,15 +64,7 @@ export function MarketingContactForm() {
       </div>
 
       <form onSubmit={submit}>
-        <p className="text-sm leading-relaxed text-slate-600">
-          Send a message — we read every inquiry and usually reply within one business day. You can also
-          email us directly at{" "}
-          <a href={SITE_MAILTO_HREF} className="font-medium text-violet-700 underline-offset-2 hover:underline">
-            {SITE_PUBLIC_EMAIL}
-          </a>
-          .
-        </p>
-        <div className="mt-5 space-y-4">
+        <div className="space-y-4">
           <input
             className={input}
             placeholder="Your name"

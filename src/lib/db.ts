@@ -250,7 +250,12 @@ async function writeMongoSnapshot(data: AppDatabase): Promise<void> {
  */
 export async function readDb(): Promise<AppDatabase> {
   if (isMongoEnabled()) {
-    return readMongoSnapshot();
+    try {
+      return await readMongoSnapshot();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown Mongo read error";
+      console.warn(`Mongo read failed, falling back to JSON DB: ${message}`);
+    }
   }
   return readJsonDb();
 }
@@ -258,8 +263,13 @@ export async function readDb(): Promise<AppDatabase> {
 export async function writeDb(data: AppDatabase): Promise<void> {
   const normalized = normalizeAppDatabase(data);
   if (isMongoEnabled()) {
-    await writeMongoSnapshot(normalized);
-    return;
+    try {
+      await writeMongoSnapshot(normalized);
+      return;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown Mongo write error";
+      console.warn(`Mongo write failed, falling back to JSON DB: ${message}`);
+    }
   }
   await writeJsonDb(normalized);
 }

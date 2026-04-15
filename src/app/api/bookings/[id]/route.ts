@@ -49,7 +49,9 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
     db.bookings[idx] = next;
     await writeDb(db);
     return NextResponse.json({ data: next });
-  } catch {
-    return NextResponse.json({ error: "Server error while updating booking." }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown server error";
+    console.error("Booking PATCH failed", { error: message });
+    return NextResponse.json({ error: `Server error while updating booking: ${message}` }, { status: 500 });
   }
 }

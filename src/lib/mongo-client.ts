@@ -17,7 +17,11 @@ export async function getMongoClient(): Promise<MongoClient> {
     throw new Error("MONGODB_URI is not set");
   }
   if (!global.__daycareMongoClientPromise) {
-    const client = new MongoClient(uri);
+    const client = new MongoClient(uri, {
+      // Keep auth/register routes responsive when Mongo is unreachable.
+      serverSelectionTimeoutMS: 1500,
+      connectTimeoutMS: 1500,
+    });
     global.__daycareMongoClientPromise = client.connect();
   }
   return global.__daycareMongoClientPromise;

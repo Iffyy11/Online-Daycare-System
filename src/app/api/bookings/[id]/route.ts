@@ -15,37 +15,41 @@ const patchSchema = z
   });
 
 export async function PATCH(request: Request, ctx: { params: Promise<{ id: string }> }) {
-  const session = await getSession();
-  if (!session || session.role === "parent") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  try {
+    const session = await getSession();
+    if (!session || session.role === "parent") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  const { id } = await ctx.params;
-  const parsed = patchSchema.safeParse(await request.json());
-  if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid update." }, { status: 400 });
-  }
+    const { id } = await ctx.params;
+    const parsed = patchSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid update." }, { status: 400 });
+    }
 
-  const db = await readDb();
-  const idx = db.bookings.findIndex((b) => b.id === id);
-  if (idx === -1) {
-    return NextResponse.json({ error: "Booking not found." }, { status: 404 });
-  }
+    const db = await readDb();
+    const idx = db.bookings.findIndex((b) => b.id === id);
+    if (idx === -1) {
+      return NextResponse.json({ error: "Booking not found." }, { status: 404 });
+    }
 
-  const current = db.bookings[idx];
-  const next: Booking = { ...current };
+    const current = db.bookings[idx];
+    const next: Booking = { ...current };
 
-  if (parsed.data.status !== undefined) {
-    next.status = parsed.data.status;
-  }
-  if (parsed.data.paymentStatus !== undefined) {
-    next.paymentStatus = parsed.data.paymentStatus;
-  }
-  if (parsed.data.paymentReference !== undefined) {
-    next.paymentReference = parsed.data.paymentReference;
-  }
+    if (parsed.data.status !== undefined) {
+      next.status = parsed.data.status;
+    }
+    if (parsed.data.paymentStatus !== undefined) {
+      next.paymentStatus = parsed.data.paymentStatus;
+    }
+    if (parsed.data.paymentReference !== undefined) {
+      next.paymentReference = parsed.data.paymentReference;
+    }
 
-  db.bookings[idx] = next;
-  await writeDb(db);
-  return NextResponse.json({ data: next });
+    db.bookings[idx] = next;
+    await writeDb(db);
+    return NextResponse.json({ data: next });
+  } catch {
+    return NextResponse.json({ error: "Server error while updating booking." }, { status: 500 });
+  }
 }

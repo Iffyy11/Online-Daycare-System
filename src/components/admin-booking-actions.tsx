@@ -18,18 +18,27 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
   async function patch(body: Record<string, unknown>) {
     setBusy(true);
     setErr("");
-    const res = await fetch(`/api/bookings/${bookingId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    setBusy(false);
-    if (!res.ok) {
-      const j = (await res.json().catch(() => ({}))) as { error?: string };
-      setErr(j.error ?? "Update failed");
-      return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        if (res.status === 401) {
+          setErr("Your session expired. Please log in again.");
+          return;
+        }
+        setErr(j.error ?? `Update failed (${res.status})`);
+        return;
+      }
+      router.refresh();
+    } catch {
+      setErr("Update failed. Please check your connection and try again.");
+    } finally {
+      setBusy(false);
     }
-    router.refresh();
   }
 
   const btn = compact

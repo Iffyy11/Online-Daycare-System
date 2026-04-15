@@ -1,6 +1,5 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { hashSync } from "bcryptjs";
 import {
   AppDatabase,
   Booking,
@@ -18,6 +17,8 @@ const PAYMENT_METHODS: Booking["paymentMethod"][] = ["mpesa", "cash"];
 const PAYMENT_STATUSES: Booking["paymentStatus"][] = ["unpaid", "pending_verification", "paid"];
 const BOOKING_STATUSES: Booking["status"][] = ["pending", "approved", "declined"];
 const PROGRESS_CATEGORIES: ProgressCategory[] = ["learning", "social", "wellbeing", "general"];
+const ADMIN_PASSWORD_HASH = "$2b$10$psuKpdtGmLOc4oDZSRaUz.R7n4ruFic2XxERkdUkZrD3wNMvXX9OS";
+const TEACHER_PASSWORD_HASH = "$2b$10$B6tnR1y18/KxcxrEq8WhPOkPH/g1w1MUaJk7WWTlAlbSEOG3hXsaS";
 
 const SNAPSHOT_ID = "app" as const;
 const SNAPSHOT_COLLECTION = "app_snapshot";
@@ -102,7 +103,10 @@ function normalizeProgress(raw: Record<string, unknown>): ProgressEntry {
   };
 }
 
-const dbPath = path.join(process.cwd(), "data", "db.json");
+const projectDbPath = path.join(process.cwd(), "data", "db.json");
+const dbPath =
+  (typeof process.env.DB_FILE_PATH === "string" && process.env.DB_FILE_PATH.trim()) ||
+  (process.env.VERCEL ? path.join("/tmp", "daycare-db.json") : projectDbPath);
 
 function normalizeUserRole(role: string): UserRole {
   if (role === "parent") return "parent";
@@ -116,14 +120,14 @@ const defaultDb: AppDatabase = {
       id: "u1",
       name: "Admin User",
       email: "admin@daycare.com",
-      passwordHash: hashSync("admin123", 10),
+      passwordHash: ADMIN_PASSWORD_HASH,
       role: "admin",
     },
     {
       id: "t1",
       name: "Teacher Grace",
       email: "teacher@daycare.com",
-      passwordHash: hashSync("teacher123", 10),
+      passwordHash: TEACHER_PASSWORD_HASH,
       role: "teacher",
     },
   ],
@@ -210,7 +214,13 @@ async function ensureJsonFile() {
     await fs.access(dbPath);
   } catch {
     await fs.mkdir(path.dirname(dbPath), { recursive: true });
-    await fs.writeFile(dbPath, JSON.stringify(defaultDb, null, 2), "utf-8");
+    try {
+      // In serverless environments, seed writable storage from bundled project data if it exists.
+      const bundled = await fs.readFile(projectDbPath, "utf-8");
+      await fs.writeFile(dbPath, bundled, "utf-8");
+    } catch {
+      await fs.writeFile(dbPath, JSON.stringify(defaultDb, null, 2), "utf-8");
+    }
   }
 }
 

@@ -18,12 +18,12 @@ const bookingSchema = z.object({
   pickUpTime: z.string().min(4),
   programType: z.string().min(2),
   notes: z.string().optional().default(""),
-  paymentMethod: z.enum(["card", "mpesa", "bank_transfer", "cash", "pay_later"]),
+  paymentMethod: z.enum(["mpesa", "cash"]),
   paymentReference: z.string().optional().default(""),
 });
 
 function derivePaymentStatus(method: Booking["paymentMethod"]): Booking["paymentStatus"] {
-  if (method === "pay_later") return "unpaid";
+  if (method === "cash") return "unpaid";
   return "pending_verification";
 }
 

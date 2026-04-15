@@ -10,7 +10,7 @@ export type Child = {
 
 export type BookingStatus = "pending" | "approved" | "declined";
 
-export type PaymentMethod = "card" | "mpesa" | "bank_transfer" | "cash" | "pay_later";
+export type PaymentMethod = "mpesa" | "cash";
 
 export type PaymentStatus = "unpaid" | "pending_verification" | "paid";
 
@@ -66,7 +66,7 @@ export type DashboardStats = {
   occupancyRate: number;
 };
 
-export type UserRole = "admin" | "parent";
+export type UserRole = "admin" | "teacher" | "parent";
 
 export type User = {
   id: string;

@@ -22,12 +22,7 @@ const emptyForm = {
   pickUpTime: "",
   programType: "Full day",
   notes: "",
-  paymentMethod: "pay_later" as
-    | "card"
-    | "mpesa"
-    | "bank_transfer"
-    | "cash"
-    | "pay_later",
+  paymentMethod: "mpesa" as "mpesa" | "cash",
   paymentReference: "",
 };
 
@@ -235,10 +230,9 @@ export function BookingForm({ defaultParentEmail = "", defaultParentName = "" }:
       </fieldset>
 
       <fieldset className="space-y-4">
-        <legend className="text-sm font-semibold text-indigo-600">Payment (demo)</legend>
+        <legend className="text-sm font-semibold text-indigo-600">Payment</legend>
         <p className="text-xs text-slate-500">
-          No real money is charged here. In production you would connect M-Pesa, card, or bank APIs.
-          Staff can mark invoices as paid after they verify payment.
+          Choose how you will pay. M-Pesa payments stay pending until staff verifies the reference.
         </p>
         <div className="grid gap-4 md:grid-cols-2">
           <label className={`${labelClass} md:col-span-2`}>
@@ -253,24 +247,19 @@ export function BookingForm({ defaultParentEmail = "", defaultParentName = "" }:
               }
               className={`mt-1 ${inputClass} w-full`}
             >
-              <option value="pay_later">I&apos;ll decide later</option>
               <option value="mpesa">M-Pesa</option>
-              <option value="card">Card</option>
-              <option value="bank_transfer">Bank transfer</option>
               <option value="cash">Cash at the center</option>
             </select>
           </label>
-          {form.paymentMethod !== "pay_later" ? (
-            <label className={`${labelClass} md:col-span-2`}>
-              Reference (M-Pesa code, last 4 digits, or transfer note)
-              <input
-                value={form.paymentReference}
-                onChange={(e) => setForm({ ...form, paymentReference: e.target.value })}
-                className={`mt-1 ${inputClass} w-full`}
-                placeholder="Optional for demo"
-              />
-            </label>
-          ) : null}
+          <label className={`${labelClass} md:col-span-2`}>
+            {form.paymentMethod === "mpesa" ? "M-Pesa reference code" : "Receipt / note (optional)"}
+            <input
+              value={form.paymentReference}
+              onChange={(e) => setForm({ ...form, paymentReference: e.target.value })}
+              className={`mt-1 ${inputClass} w-full`}
+              placeholder={form.paymentMethod === "mpesa" ? "e.g. QAB1CDE2" : "Optional"}
+            />
+          </label>
         </div>
       </fieldset>
 

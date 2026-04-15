@@ -48,9 +48,7 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
           Create your parent account
         </h1>
-        <p className="mt-2 text-sm text-slate-600">
-          No shared demo login — sign up with your email, then sign in anytime.
-        </p>
+        <p className="mt-2 text-sm text-slate-600">Sign up with your email, then sign in anytime.</p>
         <form
           onSubmit={submit}
           className="mt-6 space-y-4 rounded-2xl border border-violet-100 bg-white p-5 shadow-sm sm:mt-8 sm:p-6"

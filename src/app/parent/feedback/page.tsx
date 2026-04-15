@@ -1,5 +1,4 @@
 import { ParentFeedbackForm } from "@/components/parent-feedback-form";
-import { ParentPageShell } from "@/components/parent-page-shell";
 import Link from "next/link";
 
 export const metadata = {
@@ -8,7 +7,7 @@ export const metadata = {
 
 export default function ParentFeedbackPage() {
   return (
-    <ParentPageShell>
+    <>
       <header className="border-b border-violet-100 pb-8">
         <p className="text-sm font-semibold uppercase tracking-wide text-violet-600">Community</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Share feedback</h1>
@@ -26,6 +25,6 @@ export default function ParentFeedbackPage() {
           to see how posts appear alongside our featured stories.
         </p>
       </div>
-    </ParentPageShell>
+    </>
   );
 }

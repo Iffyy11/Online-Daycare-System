@@ -96,8 +96,8 @@ export default async function AdminDashboardPage() {
         <p className="text-sm font-semibold uppercase tracking-wide text-violet-600">Overview</p>
         <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Operations at a glance</h2>
         <p className="max-w-2xl text-slate-600">
-          Parents use their own portal after signing up. You run the center from here — no separate staff
-          login.
+          Parents use their own portal after signing up. Admins and teachers use staff logins to run the
+          center from here.
         </p>
       </header>
 

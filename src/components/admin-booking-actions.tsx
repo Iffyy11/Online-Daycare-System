@@ -36,8 +36,8 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
     ? "rounded-lg px-2.5 py-1 text-xs font-semibold transition disabled:opacity-50"
     : "rounded-lg px-3 py-1.5 text-xs font-semibold transition disabled:opacity-50";
 
-  const showBookingActions = status === "pending" || status === "declined";
-  const showPaymentActions = paymentStatus === "pending_verification";
+  const showBookingActions = status === "pending" || status === "declined" || status === "approved";
+  const showPaymentActions = paymentStatus !== "paid";
 
   if (!showBookingActions && !showPaymentActions) {
     return <span className="text-xs text-slate-400">—</span>;
@@ -55,7 +55,7 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
               onClick={() => patch({ status: "approved" })}
               className={`${btn} bg-emerald-600 text-white hover:bg-emerald-700`}
             >
-              Approve
+              Approve / Accept
             </button>
             <button
               type="button"
@@ -77,7 +77,17 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
             Reopen
           </button>
         ) : null}
-        {paymentStatus === "pending_verification" ? (
+        {status === "approved" ? (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => patch({ status: "pending" })}
+            className={`${btn} bg-slate-100 text-slate-800 ring-1 ring-slate-200 hover:bg-slate-200`}
+          >
+            Move to pending
+          </button>
+        ) : null}
+        {paymentStatus !== "paid" ? (
           <>
             <button
               type="button"
@@ -85,7 +95,7 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
               onClick={() => patch({ paymentStatus: "paid" })}
               className={`${btn} bg-violet-600 text-white hover:bg-violet-700`}
             >
-              Verify payment
+              Mark paid
             </button>
             <button
               type="button"

@@ -14,13 +14,7 @@ import {
 } from "@/lib/types";
 import { getMongoDb, isMongoEnabled } from "@/lib/mongo-client";
 
-const PAYMENT_METHODS: Booking["paymentMethod"][] = [
-  "card",
-  "mpesa",
-  "bank_transfer",
-  "cash",
-  "pay_later",
-];
+const PAYMENT_METHODS: Booking["paymentMethod"][] = ["mpesa", "cash"];
 const PAYMENT_STATUSES: Booking["paymentStatus"][] = ["unpaid", "pending_verification", "paid"];
 const BOOKING_STATUSES: Booking["status"][] = ["pending", "approved", "declined"];
 const PROGRESS_CATEGORIES: ProgressCategory[] = ["learning", "social", "wellbeing", "general"];
@@ -51,7 +45,7 @@ function normalizeBooking(raw: Record<string, unknown>): Booking {
     pickUpTime: String(base.pickUpTime ?? ""),
     programType: String(base.programType ?? "Full day"),
     notes: String(base.notes ?? ""),
-    paymentMethod: PAYMENT_METHODS.includes(pm) ? pm : "pay_later",
+    paymentMethod: PAYMENT_METHODS.includes(pm) ? pm : "cash",
     paymentReference: String(base.paymentReference ?? ""),
     paymentStatus: PAYMENT_STATUSES.includes(ps) ? ps : "unpaid",
     status: BOOKING_STATUSES.includes(st) ? st : "pending",
@@ -111,7 +105,9 @@ function normalizeProgress(raw: Record<string, unknown>): ProgressEntry {
 const dbPath = path.join(process.cwd(), "data", "db.json");
 
 function normalizeUserRole(role: string): UserRole {
-  return role === "parent" ? "parent" : "admin";
+  if (role === "parent") return "parent";
+  if (role === "teacher") return "teacher";
+  return "admin";
 }
 
 const defaultDb: AppDatabase = {
@@ -122,6 +118,13 @@ const defaultDb: AppDatabase = {
       email: "admin@daycare.com",
       passwordHash: hashSync("admin123", 10),
       role: "admin",
+    },
+    {
+      id: "t1",
+      name: "Teacher Grace",
+      email: "teacher@daycare.com",
+      passwordHash: hashSync("teacher123", 10),
+      role: "teacher",
     },
   ],
   children: [
@@ -177,11 +180,21 @@ const defaultDb: AppDatabase = {
 };
 
 function normalizeAppDatabase(data: AppDatabase): AppDatabase {
+  const users = (data.users ?? []).map((u) => ({
+    ...(u as User),
+    role: normalizeUserRole(String((u as User).role)),
+  }));
+  const hasAdmin = users.some((u) => u.role === "admin");
+  const hasTeacher = users.some((u) => u.role === "teacher");
+  if (!hasAdmin) {
+    users.unshift(defaultDb.users[0]);
+  }
+  if (!hasTeacher) {
+    users.push(defaultDb.users[1]);
+  }
+
   return {
-    users: (data.users ?? []).map((u) => ({
-      ...(u as User),
-      role: normalizeUserRole(String((u as User).role)),
-    })),
+    users,
     bookings: (data.bookings ?? []).map((b) => normalizeBooking(b as unknown as Record<string, unknown>)),
     children: (data.children ?? []).map((c) => normalizeChild(c as unknown as Record<string, unknown>)),
     messages: (data.messages ?? []).map((m) => normalizeMessage(m as unknown as Record<string, unknown>)),

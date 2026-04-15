@@ -16,7 +16,7 @@ const patchSchema = z
 
 export async function PATCH(request: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = await getSession();
-  if (!session || session.role !== "admin") {
+  if (!session || session.role === "parent") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

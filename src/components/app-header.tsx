@@ -12,7 +12,9 @@ const adminLinks = [
 ];
 
 function roleLabel(role: string) {
-  return role === "parent" ? "Parent" : "Admin";
+  if (role === "parent") return "Parent";
+  if (role === "teacher") return "Teacher";
+  return "Admin";
 }
 
 export async function AppHeader() {

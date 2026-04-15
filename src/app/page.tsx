@@ -106,7 +106,7 @@ export default async function HomePage() {
                 href={SITE_PHONE_HREF}
                 className="inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
               >
-                Call {SITE_PHONE_DISPLAY}
+                Call us
               </a>
               <Link
                 href="/register"
@@ -333,7 +333,7 @@ export default async function HomePage() {
                 href={SITE_PHONE_HREF}
                 className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition hover:bg-[#5b21b6]"
               >
-                Call {SITE_PHONE_DISPLAY}
+                Call us
               </a>
             </div>
             <MarketingContactForm />

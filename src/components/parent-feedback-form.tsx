@@ -13,21 +13,25 @@ export function ParentFeedbackForm() {
     e.preventDefault();
     setStatus("sending");
     setMsg("");
-    const res = await fetch("/api/community-feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
-    });
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    setStatus("idle");
-    if (!res.ok) {
+    try {
+      const res = await fetch("/api/community-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        setStatus("err");
+        setMsg(body.error ?? "Could not save feedback.");
+        return;
+      }
+      setStatus("ok");
+      setContent("");
+      router.refresh();
+    } catch {
       setStatus("err");
-      setMsg(body.error ?? "Could not save feedback.");
-      return;
+      setMsg("Could not save feedback. Check your connection and try again.");
     }
-    setStatus("ok");
-    setContent("");
-    router.refresh();
   };
 
   return (

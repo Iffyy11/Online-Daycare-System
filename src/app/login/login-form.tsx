@@ -88,6 +88,9 @@ export function LoginForm({ registered }: { registered: boolean }) {
             {loading ? "Signing in..." : "Continue"}
           </button>
         </form>
+        <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
+          Staff login: use your admin or teacher account credentials.
+        </p>
         <p className="mt-6 text-center text-sm text-slate-500">
           <Link href="/" className="font-medium text-violet-700 hover:text-violet-900">
             ← Back to website

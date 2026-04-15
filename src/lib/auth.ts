@@ -24,7 +24,7 @@ export async function authenticate(email: string, password: string) {
   const payload: AuthPayload = {
     userId: user.id,
     email: user.email,
-    role: user.role === "parent" ? "parent" : "admin",
+    role: user.role,
     name: user.name,
   };
   const token = jwt.sign(payload, AUTH_SECRET, { expiresIn: "12h" });
@@ -37,7 +37,7 @@ export async function getSession(): Promise<AuthPayload | null> {
   if (!token) return null;
   try {
     const raw = jwt.verify(token, AUTH_SECRET) as AuthPayload;
-    const role: UserRole = raw.role === "parent" ? "parent" : "admin";
+    const role: UserRole = raw.role === "parent" || raw.role === "teacher" ? raw.role : "admin";
     return { ...raw, role };
   } catch {
     return null;

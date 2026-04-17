@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 type LoginPayload = {
   userId: string;
@@ -46,22 +45,19 @@ export function LoginForm({ registered }: { registered: boolean }) {
   };
 
   const inputClass =
-    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500";
+    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20";
 
   return (
-    <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col justify-center px-4 py-12">
-      <div className="absolute right-4 top-6 sm:right-6 sm:top-8">
-        <ThemeToggle />
-      </div>
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col justify-center px-4 py-12">
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         {registered ? (
-          <p className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
+          <p className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
             Account created. Sign in with your new email and password.
           </p>
         ) : null}
         <form onSubmit={onSubmit} className="space-y-4">
           <label className="block">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Email</span>
+            <span className="text-sm font-medium text-slate-700">Email</span>
             <input
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -73,7 +69,7 @@ export function LoginForm({ registered }: { registered: boolean }) {
             />
           </label>
           <label className="block">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Password</span>
+            <span className="text-sm font-medium text-slate-700">Password</span>
             <input
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -86,7 +82,7 @@ export function LoginForm({ registered }: { registered: boolean }) {
           <div className="flex justify-end">
             <Link
               href="/forgot-password"
-              className="text-sm font-medium text-violet-700 underline-offset-2 hover:text-violet-900 hover:underline dark:text-violet-400 dark:hover:text-violet-300"
+              className="text-sm font-medium text-violet-700 underline-offset-2 hover:text-violet-900 hover:underline"
             >
               Forgot password?
             </Link>
@@ -100,19 +96,16 @@ export function LoginForm({ registered }: { registered: boolean }) {
             {loading ? "Signing in..." : "Continue"}
           </button>
         </form>
-        <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/80 dark:text-slate-300">
-          <strong className="text-slate-800 dark:text-slate-100">Teacher (demo):</strong>{" "}
-          <code className="rounded bg-white px-1 dark:bg-slate-900">teacher@daycare.com</code> /{" "}
-          <code className="rounded bg-white px-1 dark:bg-slate-900">teacher123</code>
-          <span className="mt-1 block text-slate-500 dark:text-slate-400">
+        <p className="mt-4 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
+          <strong className="text-slate-800">Teacher (demo):</strong>{" "}
+          <code className="rounded bg-white px-1">teacher@daycare.com</code> /{" "}
+          <code className="rounded bg-white px-1">teacher123</code>
+          <span className="mt-1 block text-slate-500">
             Admins can create more teacher accounts from the staff dashboard after logging in as admin.
           </span>
         </p>
-        <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-          <Link
-            href="/"
-            className="font-medium text-violet-700 hover:text-violet-900 dark:text-violet-400 dark:hover:text-violet-300"
-          >
+        <p className="mt-6 text-center text-sm text-slate-500">
+          <Link href="/" className="font-medium text-violet-700 hover:text-violet-900">
             ← Back to website
           </Link>
         </p>

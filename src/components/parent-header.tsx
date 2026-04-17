@@ -2,7 +2,6 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { getSession } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const links = [
   { href: "/parent/dashboard", label: "Home" },
@@ -16,12 +15,9 @@ export async function ParentHeader() {
   const session = await getSession();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-violet-100/90 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95">
+    <header className="sticky top-0 z-50 border-b border-violet-100/90 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link
-          href="/parent/dashboard"
-          className="flex items-center gap-2 font-semibold text-slate-900 dark:text-slate-100"
-        >
+        <Link href="/parent/dashboard" className="flex items-center gap-2 font-semibold text-slate-900">
           <BrandLogo className="h-9 w-9 shrink-0" />
           <span className="hidden sm:inline">Parent portal</span>
         </Link>
@@ -30,23 +26,19 @@ export async function ParentHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-violet-50 hover:text-violet-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-violet-50 hover:text-violet-900"
             >
               {item.label}
             </Link>
           ))}
         </nav>
         <div className="order-2 flex items-center gap-2 sm:order-3">
-          <ThemeToggle />
-          <Link
-            href="/"
-            className="hidden text-sm text-slate-500 hover:text-violet-800 dark:text-slate-400 dark:hover:text-violet-300 sm:inline"
-          >
+          <Link href="/" className="hidden text-sm text-slate-500 hover:text-violet-800 sm:inline">
             Website
           </Link>
           {session ? (
             <>
-              <span className="max-w-[10rem] truncate rounded-lg border border-violet-200 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-900 dark:border-violet-800 dark:bg-violet-950/80 dark:text-violet-100 sm:max-w-xs sm:px-3">
+              <span className="max-w-[10rem] truncate rounded-lg border border-violet-200 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-900 sm:max-w-xs sm:px-3">
                 {session.email}
               </span>
               <LogoutButton />

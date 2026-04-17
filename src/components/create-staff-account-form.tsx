@@ -42,21 +42,21 @@ export function CreateStaffAccountForm() {
   };
 
   const input =
-    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
+    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20";
 
   return (
-    <section className="rounded-2xl border border-violet-200 bg-white p-6 shadow-sm dark:border-violet-800 dark:bg-slate-900/40">
-      <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Add teacher account</h2>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+    <section className="rounded-2xl border border-violet-200 bg-white p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-slate-900">Add teacher account</h2>
+      <p className="mt-1 text-sm text-slate-600">
         Create login credentials for a teacher. Share the email and password with them securely — they
         sign in at the same page as you and land on the staff dashboard.
       </p>
       <form onSubmit={submit} className="mt-5 space-y-4">
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label className="block text-sm font-medium text-slate-700">
           Full name
           <input value={name} onChange={(e) => setName(e.target.value)} required className={input} />
         </label>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label className="block text-sm font-medium text-slate-700">
           Work email
           <input
             type="email"
@@ -67,7 +67,7 @@ export function CreateStaffAccountForm() {
             className={input}
           />
         </label>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+        <label className="block text-sm font-medium text-slate-700">
           Initial password
           <input
             type="password"
@@ -79,9 +79,9 @@ export function CreateStaffAccountForm() {
             className={input}
           />
         </label>
-        {error ? <p className="text-sm font-medium text-rose-600 dark:text-rose-400">{error}</p> : null}
+        {error ? <p className="text-sm font-medium text-rose-600">{error}</p> : null}
         {ok ? (
-          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
+          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
             Teacher account created. Ask them to log in at <strong>/login</strong> with that email and
             password.
           </p>

@@ -97,12 +97,10 @@ export default async function AdminDashboardPage() {
         </div>
       </section>
 
-      <header className="mt-10 space-y-2 border-b border-slate-200 pb-8 dark:border-slate-700">
-        <p className="text-sm font-semibold uppercase tracking-wide text-violet-600 dark:text-violet-400">Overview</p>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
-          Operations at a glance
-        </h2>
-        <p className="max-w-2xl text-slate-600 dark:text-slate-400">
+      <header className="mt-10 space-y-2 border-b border-slate-200 pb-8">
+        <p className="text-sm font-semibold uppercase tracking-wide text-violet-600">Overview</p>
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Operations at a glance</h2>
+        <p className="max-w-2xl text-slate-600">
           Parents use their own portal after signing up. Admins and teachers use staff logins to run the
           center from here.
         </p>
@@ -318,7 +316,7 @@ export default async function AdminDashboardPage() {
         </div>
       ) : null}
 
-      <section className="mt-8 rounded-2xl border border-violet-100 bg-violet-50/50 p-5 text-sm text-violet-950 dark:border-violet-900 dark:bg-violet-950/30 dark:text-violet-100">
+      <section className="mt-8 rounded-2xl border border-violet-100 bg-violet-50/50 p-5 text-sm text-violet-950">
         <strong>Tip:</strong> Log child progress under <Link className="font-semibold underline" href="/children">Children</Link>{" "}
         and message a family from{" "}
         <Link className="font-semibold underline" href="/chat">Messages</Link> by selecting their parent account.

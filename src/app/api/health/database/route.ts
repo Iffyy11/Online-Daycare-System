@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { readDb } from "@/lib/db";
-import { getMongoClient, isMongoEnabled } from "@/lib/mongo-client";
+import { getMongoClient, isMongoEnabled, isMongoUriProvided } from "@/lib/mongo-client";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +12,22 @@ export async function GET() {
   const mongoUriConfigured = isMongoEnabled();
   const databaseName = process.env.MONGODB_DB?.trim() || "daycare";
   const onVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
+
+  if (isMongoUriProvided() && !mongoUriConfigured) {
+    return NextResponse.json(
+      {
+        ok: false,
+        persistence: "invalid-uri",
+        mongoUriConfigured: false,
+        mongoUriProvided: true,
+        onVercel,
+        database: databaseName,
+        error: 'MONGODB_URI is set but invalid: it must start with "mongodb://" or "mongodb+srv://".',
+        hint: "In Atlas: Connect → Drivers → copy the full connection string. Replace <password> with your DB user password (URL-encode special characters). No spaces before or after the URL in Vercel.",
+      },
+      { status: 503 },
+    );
+  }
 
   try {
     if (mongoUriConfigured) {

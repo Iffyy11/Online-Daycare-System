@@ -356,9 +356,11 @@ export async function readDb(): Promise<AppDatabase> {
         return readBundledJsonDb();
       }
       if (isVercel) {
-        throw new Error(
-          `MongoDB read failed on Vercel (${message}). Fix MONGODB_URI / network access; bundled demo data would not include live bookings.`,
+        // Keep the marketing site and dashboards renderable; writes still require working Mongo on Vercel.
+        console.error(
+          `MongoDB read failed on Vercel (${message}). Serving bundled snapshot until Atlas is reachable. Check /api/health/database.`,
         );
+        return readBundledJsonDb();
       }
       return readJsonDb();
     }

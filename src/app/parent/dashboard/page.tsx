@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getSession } from "@/lib/auth";
+import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -131,7 +132,7 @@ export default async function ParentDashboardPage() {
                     <p className="text-sm text-slate-600">{p.detail}</p>
                     <p className="mt-1 text-xs text-slate-400">
                       {child?.name ?? "Child"} · {p.recordedByName} ·{" "}
-                      {new Date(p.recordedAt).toLocaleString()}
+                      {formatNairobiDateTime(p.recordedAt)}
                     </p>
                   </div>
                   {child ? (

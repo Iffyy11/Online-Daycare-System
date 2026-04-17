@@ -5,6 +5,7 @@ import { AppPageShell } from "@/components/app-page-shell";
 import { CreateStaffAccountForm } from "@/components/create-staff-account-form";
 import { getSession } from "@/lib/auth";
 import { paymentMethodLabel, paymentStatusLabel } from "@/lib/booking-labels";
+import { formatVisitDateLabel } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -174,7 +175,7 @@ export default async function AdminDashboardPage() {
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-slate-900">
-                        {booking.childName} · {booking.date}
+                        {booking.childName} · {formatVisitDateLabel(booking.date)}
                       </p>
                       <p className="text-sm text-slate-600">{booking.parentName}</p>
                       <p className="mt-1 text-xs text-slate-500">
@@ -225,7 +226,7 @@ export default async function AdminDashboardPage() {
                     <div>
                       <p className="font-semibold text-slate-900">{booking.parentName}</p>
                       <p className="text-sm text-slate-700">
-                        {booking.childName} · {booking.date}
+                        {booking.childName} · {formatVisitDateLabel(booking.date)}
                       </p>
                       <p className="mt-1 text-xs text-slate-600">
                         {paymentMethodLabel(booking.paymentMethod)}
@@ -262,7 +263,7 @@ export default async function AdminDashboardPage() {
                 className="rounded-xl border border-slate-100 bg-slate-50/80 px-3 py-3"
               >
                 <p className="font-medium text-slate-900">
-                  {booking.childName} · {booking.date}
+                  {booking.childName} · {formatVisitDateLabel(booking.date)}
                 </p>
                 <p className="text-slate-600">
                   {booking.parentName}

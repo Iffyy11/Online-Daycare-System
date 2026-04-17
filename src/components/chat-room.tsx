@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import { ChatMessage } from "@/lib/types";
 
 type Props = {
@@ -52,6 +53,7 @@ export function ChatRoom({ initialMessages }: Props) {
             <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600">
               {message.from}
             </p>
+            <p className="mt-0.5 text-[10px] text-slate-400">{formatNairobiDateTime(message.sentAt)}</p>
             <p className="mt-1 text-slate-700">{message.message}</p>
           </article>
         ))}

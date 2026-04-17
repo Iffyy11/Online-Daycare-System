@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import type { ChatMessage } from "@/lib/types";
 
 type ParentOption = { id: string; name: string; email: string };
@@ -74,6 +75,7 @@ export function StaffChatRoom({ initialMessages, parents }: Props) {
                 <span className="ml-2 font-normal text-slate-500">(internal)</span>
               )}
             </p>
+            <p className="mt-0.5 text-[10px] text-slate-400">{formatNairobiDateTime(m.sentAt)}</p>
             <p className="mt-1 text-slate-800">{m.message}</p>
           </article>
         ))}

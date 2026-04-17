@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
 
 function catClass(c: string) {
@@ -64,7 +65,7 @@ export default async function ParentChildDetailPage({ params }: Props) {
                 <h3 className="mt-2 font-semibold text-slate-900">{e.title}</h3>
                 <p className="mt-1 text-slate-700">{e.detail}</p>
                 <p className="mt-3 text-xs text-slate-500">
-                  {e.recordedByName} · {new Date(e.recordedAt).toLocaleString()}
+                  {e.recordedByName} · {formatNairobiDateTime(e.recordedAt)}
                 </p>
               </li>
             ))

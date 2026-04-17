@@ -1,4 +1,5 @@
 import { getSession } from "@/lib/auth";
+import { formatVisitDateLabel } from "@/lib/nairobi-time";
 import { BookingForm } from "@/components/booking-form";
 import { paymentMethodLabel, paymentStatusLabel } from "@/lib/booking-labels";
 import { readDb } from "@/lib/db";
@@ -28,7 +29,8 @@ export default async function ParentBookingsPage() {
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Book care</h1>
         <p className="max-w-2xl text-slate-600">
           Submit a request tied to <strong>your</strong> account. Only your rows appear in the table
-          below — the admin approves from the dashboard.
+          below — the admin approves from the dashboard. Visit date and times use the center&apos;s
+          schedule in <strong>Nairobi time (EAT)</strong>.
         </p>
       </header>
 
@@ -64,7 +66,7 @@ export default async function ParentBookingsPage() {
                 <tr key={b.id} className="border-t border-slate-100">
                   <td className="px-3 py-3 font-medium text-slate-900">{b.childName}</td>
                   <td className="px-3 py-3 text-slate-600">
-                    {b.date}
+                    {formatVisitDateLabel(b.date)}
                     <br />
                     <span className="text-xs">
                       {b.dropOffTime}–{b.pickUpTime}

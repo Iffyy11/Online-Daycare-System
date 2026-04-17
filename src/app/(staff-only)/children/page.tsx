@@ -1,5 +1,6 @@
 import { AppPageShell } from "@/components/app-page-shell";
 import { StaffProgressForm } from "@/components/staff-progress-form";
+import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
 
 function parentLabel(
@@ -66,7 +67,7 @@ export default async function StaffChildrenPage() {
                         <p className="text-xs text-slate-600">{e.detail}</p>
                         <p className="mt-1 text-xs text-slate-400">
                           {e.category} · {e.recordedByName} ·{" "}
-                          {new Date(e.recordedAt).toLocaleDateString()}
+                          {formatNairobiDateTime(e.recordedAt)}
                         </p>
                       </li>
                     ))

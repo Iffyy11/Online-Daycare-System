@@ -3,6 +3,7 @@ import { AppPageShell } from "@/components/app-page-shell";
 import { BookingForm } from "@/components/booking-form";
 import { getSession } from "@/lib/auth";
 import { paymentMethodLabel, paymentStatusLabel } from "@/lib/booking-labels";
+import { formatVisitDateLabel } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,8 @@ export default async function StaffBookingsPage() {
         </h1>
         <p className="max-w-2xl text-slate-600">
           Requests from the parent portal are tagged with a linked account. You can also enter a
-          walk-in request below (no linked account).
+          walk-in request below (no linked account). Dates and visit times follow{" "}
+          <strong>Nairobi (EAT)</strong>.
         </p>
       </header>
 
@@ -85,7 +87,9 @@ export default async function StaffBookingsPage() {
                 <td className="whitespace-nowrap px-3 py-3 align-top text-slate-600">
                   {booking.parentPhone || "—"}
                 </td>
-                <td className="whitespace-nowrap px-3 py-3 align-top text-slate-700">{booking.date}</td>
+                <td className="whitespace-nowrap px-3 py-3 align-top text-slate-700">
+                  {formatVisitDateLabel(booking.date)}
+                </td>
                 <td className="whitespace-nowrap px-3 py-3 align-top text-slate-600">
                   {booking.dropOffTime}–{booking.pickUpTime}
                 </td>

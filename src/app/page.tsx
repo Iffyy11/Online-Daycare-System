@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { MarketingContactForm } from "@/components/marketing-contact-form";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
+import { formatNairobiDateShort } from "@/lib/nairobi-time";
 import { formatKes } from "@/lib/pricing";
 import { SITE_MAILTO_HREF, SITE_PUBLIC_EMAIL } from "@/lib/site-contact";
 import { readDb } from "@/lib/db";
@@ -271,13 +272,7 @@ export default async function HomePage() {
                   >
                     <p className="text-sm leading-relaxed text-slate-700">&ldquo;{c.content}&rdquo;</p>
                     <p className="mt-4 text-xs font-semibold text-violet-800">— {c.authorName}</p>
-                    <p className="mt-1 text-xs text-slate-400">
-                      {new Date(c.createdAt).toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
+                    <p className="mt-1 text-xs text-slate-400">{formatNairobiDateShort(c.createdAt)}</p>
                   </li>
                 ))}
               </ul>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { getSession } from "@/lib/auth";
 import { SITE_MAILTO_HREF } from "@/lib/site-contact";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const nav = [
   { href: "/#home", label: "Home" },
@@ -18,9 +19,9 @@ export async function MarketingHeader() {
   const ctaLabel = session ? "My portal" : "Sign up";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-violet-100/80 bg-white/85 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b border-violet-100/80 bg-white/85 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-950/90">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-[4.25rem] sm:px-6">
-        <Link href="/#home" className="flex min-w-0 items-center gap-2.5 font-semibold text-slate-900">
+        <Link href="/#home" className="flex min-w-0 items-center gap-2.5 font-semibold text-slate-900 dark:text-slate-100">
           <BrandLogo className="h-9 w-9 shrink-0 sm:h-10 sm:w-10" />
           <span className="truncate text-sm font-bold tracking-tight sm:text-base">Daycare Pro</span>
         </Link>
@@ -44,6 +45,7 @@ export async function MarketingHeader() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
           <details className="relative lg:hidden">
             <summary className="list-none cursor-pointer rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm [&::-webkit-details-marker]:hidden">
               Menu

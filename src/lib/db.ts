@@ -23,6 +23,21 @@ const TEACHER_PASSWORD_HASH = "$2b$10$R3G7SYvZLVOx7UlAqQtW9eUXXbNNqgJ90VmDj/vKx6
 
 const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
 
+/** True while `npm run build` / `next build` is running (Vercel uses this too). */
+function isNpmBuildLifecycle(): boolean {
+  return process.env.npm_lifecycle_event === "build";
+}
+
+/** Next.js sets this during `next build` (including on Vercel). */
+function isNextBuildPhase(): boolean {
+  const p = process.env.NEXT_PHASE;
+  return p === "phase-production-build" || p === "phase-development-build";
+}
+
+function isRunningAppBuild(): boolean {
+  return isNpmBuildLifecycle() || isNextBuildPhase();
+}
+
 const SNAPSHOT_ID = "app" as const;
 const SNAPSHOT_COLLECTION = "app_snapshot";
 
@@ -334,8 +349,12 @@ export async function readDb(): Promise<AppDatabase> {
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown Mongo read error";
       console.warn(`Mongo read failed: ${message}`);
-      // On Vercel, never fall back to bundled JSON when Mongo is configured — that snapshot would hide
-      // new sign-ups/bookings and look like the admin UI is "not updating".
+      // During production build, Mongo may be unreachable or credentials not injected yet — do not fail
+      // the whole `next build`. At request runtime on Vercel, surface the error so operators fix Atlas.
+      if (isVercel && isRunningAppBuild()) {
+        console.warn("Vercel build: falling back to bundled JSON for prerender after Mongo read failure.");
+        return readBundledJsonDb();
+      }
       if (isVercel) {
         throw new Error(
           `MongoDB read failed on Vercel (${message}). Fix MONGODB_URI / network access; bundled demo data would not include live bookings.`,

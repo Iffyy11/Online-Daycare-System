@@ -80,9 +80,6 @@ export function MarketingFooter() {
             © {new Date().getFullYear()} Daycare Pro demo. Independent project for showcasing daycare
             operations software.
           </p>
-          <p className="text-slate-600">
-            Made by <span className="font-semibold text-violet-800">Ifrah Abdi</span>.
-          </p>
         </div>
       </div>
     </footer>

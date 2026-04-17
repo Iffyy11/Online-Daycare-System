@@ -17,6 +17,8 @@ import { readDb } from "@/lib/db";
 import { PROGRAMS } from "@/lib/programs-data";
 import "./marketing.css";
 
+export const dynamic = "force-dynamic";
+
 const marketingSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],

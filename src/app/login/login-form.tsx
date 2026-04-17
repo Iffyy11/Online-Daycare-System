@@ -79,6 +79,14 @@ export function LoginForm({ registered }: { registered: boolean }) {
               className={inputClass}
             />
           </label>
+          <div className="flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-violet-700 underline-offset-2 hover:text-violet-900 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
           {error ? <p className="text-sm font-medium text-rose-600">{error}</p> : null}
           <button
             type="submit"

@@ -4,15 +4,8 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { MarketingContactForm } from "@/components/marketing-contact-form";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
-import {
-  SITE_LOCATION_FULL,
-  SITE_LOCATION_SHORT,
-  SITE_MAILTO_HREF,
-  SITE_MAPS_URL,
-  SITE_PHONE_DISPLAY,
-  SITE_PHONE_HREF,
-  SITE_PUBLIC_EMAIL,
-} from "@/lib/site-contact";
+import { formatKes } from "@/lib/pricing";
+import { SITE_MAILTO_HREF, SITE_PUBLIC_EMAIL } from "@/lib/site-contact";
 import { readDb } from "@/lib/db";
 import { PROGRAMS } from "@/lib/programs-data";
 import "./marketing.css";
@@ -90,7 +83,7 @@ export default async function HomePage() {
           <div className="pointer-events-none absolute -left-16 bottom-10 h-56 w-56 rounded-full bg-sky-200/35 blur-3xl" />
           <div className="relative mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
             <p className="inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-violet-700 shadow-sm">
-              {SITE_LOCATION_SHORT} · Kenya
+              Kenya
             </p>
             <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]">
               Meet the people helping little ones grow with{" "}
@@ -104,18 +97,18 @@ export default async function HomePage() {
               routines, clear communication, and joyful play belong in every classroom.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href={SITE_PHONE_HREF}
-                className="inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
-              >
-                Call us
-              </a>
               <Link
                 href="/register"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/80"
+                className="inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
               >
                 Parent sign up
               </Link>
+              <a
+                href={SITE_MAILTO_HREF}
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/80"
+              >
+                Email us
+              </a>
             </div>
             <p className="mt-6 text-sm text-slate-500">
               Admin? Use your work email on{" "}
@@ -157,6 +150,10 @@ export default async function HomePage() {
                     </div>
                     <div className="flex flex-1 flex-col p-4 sm:p-5">
                       <h3 className="text-base font-bold text-violet-900 sm:text-lg">{p.title}</h3>
+                      <p className="mt-1 text-xs font-semibold text-slate-800 sm:text-sm">
+                        From KES {formatKes(p.priceFromKes)}{" "}
+                        <span className="font-normal text-slate-500">/ {p.priceUnitLabel}</span>
+                      </p>
                       <p className="mt-2 line-clamp-3 flex-1 text-xs leading-relaxed text-slate-600 sm:text-sm">
                         {p.summary}
                       </p>
@@ -297,46 +294,18 @@ export default async function HomePage() {
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                 Reach out and start your child&apos;s journey with us
               </h2>
-              <ul className="mt-6 space-y-3 text-sm text-slate-700">
-                <li>
-                  <span className="font-semibold text-slate-900">Address</span>
-                  <br />
-                  <a
-                    href={SITE_MAPS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-violet-700 underline-offset-2 hover:underline"
-                  >
-                    {SITE_LOCATION_FULL}
-                  </a>
-                </li>
-                <li>
-                  <span className="font-semibold text-slate-900">Phone</span>
-                  <br />
-                  <a
-                    href={SITE_PHONE_HREF}
-                    className="text-violet-700 underline-offset-2 hover:underline"
-                  >
-                    {SITE_PHONE_DISPLAY}
-                  </a>
-                </li>
-                <li>
-                  <span className="font-semibold text-slate-900">Email</span>
-                  <br />
-                  <a
-                    href={SITE_MAILTO_HREF}
-                    className="text-violet-700 underline-offset-2 hover:underline"
-                  >
-                    {SITE_PUBLIC_EMAIL}
-                  </a>
-                </li>
-              </ul>
-              <a
-                href={SITE_PHONE_HREF}
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition hover:bg-[#5b21b6]"
-              >
-                Call us
-              </a>
+              <p className="mt-4">
+                <a
+                  href={SITE_MAILTO_HREF}
+                  className="inline-flex rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition hover:bg-[#5b21b6]"
+                >
+                  Email {SITE_PUBLIC_EMAIL}
+                </a>
+              </p>
+              <p className="mt-4 text-xs leading-relaxed text-slate-500">
+                Campus address and direct line are shared with enrolled families. General questions welcome by
+                email.
+              </p>
             </div>
             <MarketingContactForm />
           </div>

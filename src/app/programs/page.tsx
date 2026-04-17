@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { formatKes } from "@/lib/pricing";
 import { PROGRAMS } from "@/lib/programs-data";
 
 export const metadata = {
@@ -42,6 +43,10 @@ export default function ProgramsIndexPage() {
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   <h2 className="text-lg font-bold text-slate-900 group-hover:text-violet-800">{p.title}</h2>
+                  <p className="mt-1 text-sm font-semibold text-slate-800">
+                    From KES {formatKes(p.priceFromKes)}{" "}
+                    <span className="font-normal text-slate-500">/ {p.priceUnitLabel}</span>
+                  </p>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{p.summary}</p>
                   <span className="mt-4 text-sm font-semibold text-violet-700">
                     View details <span aria-hidden>→</span>

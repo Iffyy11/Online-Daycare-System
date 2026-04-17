@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { SocialLinks } from "@/components/social-links";
-import {
-  SITE_LOCATION_FULL,
-  SITE_MAILTO_HREF,
-  SITE_MAPS_URL,
-  SITE_PHONE_DISPLAY,
-  SITE_PHONE_HREF,
-  SITE_PUBLIC_EMAIL,
-} from "@/lib/site-contact";
+import { SITE_MAILTO_HREF, SITE_PUBLIC_EMAIL } from "@/lib/site-contact";
 
 export function MarketingFooter() {
   return (
@@ -24,31 +17,12 @@ export function MarketingFooter() {
               Warm, modern care with clear communication for families — bookings, updates, and peace of
               mind in one place.
             </p>
-            <div className="mt-5 space-y-2 text-sm text-slate-600">
-              <p>
-                <span className="font-medium text-slate-800">Location:</span>{" "}
-                <a
-                  href={SITE_MAPS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-violet-700 underline-offset-2 hover:underline"
-                >
-                  {SITE_LOCATION_FULL}
-                </a>
-              </p>
-              <p>
-                <span className="font-medium text-slate-800">Phone:</span>{" "}
-                <a href={SITE_PHONE_HREF} className="text-violet-700 underline-offset-2 hover:underline">
-                  {SITE_PHONE_DISPLAY}
-                </a>
-              </p>
-              <p>
-                <span className="font-medium text-slate-800">Email:</span>{" "}
-                <a href={SITE_MAILTO_HREF} className="text-violet-700 underline-offset-2 hover:underline">
-                  {SITE_PUBLIC_EMAIL}
-                </a>
-              </p>
-            </div>
+            <p className="mt-5 text-sm text-slate-600">
+              <a href={SITE_MAILTO_HREF} className="font-medium text-violet-800 underline-offset-2 hover:underline">
+                {SITE_PUBLIC_EMAIL}
+              </a>
+            </p>
+            <p className="mt-2 text-xs text-slate-500">Full address and phone are provided to enrolled families.</p>
             <div className="mt-6">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Follow us</p>
               <SocialLinks className="mt-3" />

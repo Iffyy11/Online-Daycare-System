@@ -8,6 +8,10 @@ export type Program = {
   imageAlt: string;
   sections: ProgramSection[];
   highlights: string[];
+  /** Typical day or session anchor (KES), shown on cards and detail */
+  priceFromKes: number;
+  /** e.g. "typical day", "half-day session", "per camp week" */
+  priceUnitLabel: string;
 };
 
 export const PROGRAMS: Program[] = [
@@ -18,6 +22,8 @@ export const PROGRAMS: Program[] = [
     image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=900&q=80",
     imageAlt: "Bright daycare classroom",
     highlights: ["Circle time & literacy", "Outdoor gross motor", "Family app updates"],
+    priceFromKes: 9800,
+    priceUnitLabel: "typical day",
     sections: [
       {
         heading: "Daily rhythm",
@@ -36,6 +42,8 @@ export const PROGRAMS: Program[] = [
     image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=900&q=80",
     imageAlt: "Children at a snack table",
     highlights: ["Gentle transitions", "Smaller group sizes", "Pickup by midday"],
+    priceFromKes: 5600,
+    priceUnitLabel: "half-day session",
     sections: [
       {
         heading: "Who it suits",
@@ -54,6 +62,8 @@ export const PROGRAMS: Program[] = [
     image: "https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=900&q=80",
     imageAlt: "Children learning together",
     highlights: ["Quiet homework zone", "Active games", "Safe pickup protocols"],
+    priceFromKes: 3200,
+    priceUnitLabel: "after-school session",
     sections: [
       {
         heading: "School-age focus",
@@ -72,6 +82,8 @@ export const PROGRAMS: Program[] = [
     image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=80",
     imageAlt: "Calm nursery space",
     highlights: ["Individual care plans", "Daily logs", "Tummy time & sensory play"],
+    priceFromKes: 10500,
+    priceUnitLabel: "typical day",
     sections: [
       {
         heading: "Responsive care",
@@ -90,6 +102,8 @@ export const PROGRAMS: Program[] = [
     image: "https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=900&q=80",
     imageAlt: "Preschool activities",
     highlights: ["Phonics games", "Fine motor stations", "Conflict resolution practice"],
+    priceFromKes: 9200,
+    priceUnitLabel: "typical day",
     sections: [
       {
         heading: "Learning through play",
@@ -108,6 +122,8 @@ export const PROGRAMS: Program[] = [
     image: "https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=900&q=80",
     imageAlt: "Outdoor summer play",
     highlights: ["Weekly themes", "Outdoor adventure", "Flexible weekly booking"],
+    priceFromKes: 18500,
+    priceUnitLabel: "per themed week",
     sections: [
       {
         heading: "What to expect",

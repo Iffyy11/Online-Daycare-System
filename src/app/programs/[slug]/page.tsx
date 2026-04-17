@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { formatKes, HOURLY_RATE_BANDS } from "@/lib/pricing";
 import { PROGRAMS, getProgramBySlug } from "@/lib/programs-data";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -34,6 +35,14 @@ export default async function ProgramDetailPage({ params }: Props) {
         <header className="mt-6">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{program.title}</h1>
           <p className="mt-3 text-lg text-slate-600">{program.summary}</p>
+          <p className="mt-4 inline-flex flex-wrap items-baseline gap-2 rounded-2xl border border-emerald-200/80 bg-emerald-50/80 px-4 py-3 text-emerald-950">
+            <span className="text-sm font-semibold">From KES {formatKes(program.priceFromKes)}</span>
+            <span className="text-sm text-emerald-800/90">/ {program.priceUnitLabel}</span>
+          </p>
+          <p className="mt-2 text-xs text-slate-500">
+            Bookings use time-of-day hourly rates for the hours your child is on site; packages above are
+            typical anchors. Staff confirms the final fee.
+          </p>
         </header>
 
         <div className="relative mt-8 aspect-[2/1] w-full overflow-hidden rounded-2xl ring-1 ring-violet-100">
@@ -57,6 +66,23 @@ export default async function ProgramDetailPage({ params }: Props) {
             </li>
           ))}
         </ul>
+
+        <section className="mt-10 rounded-2xl border border-slate-200 bg-slate-50/80 p-6">
+          <h2 className="text-lg font-bold text-slate-900">Hourly rates by time (KES)</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Peak drop-off and pick-up windows cost a bit more per hour than mid-day care. Your booking form
+            shows an estimate from your drop-off and pick-up times.
+          </p>
+          <ul className="mt-4 divide-y divide-slate-200 text-sm">
+            {HOURLY_RATE_BANDS.map((row) => (
+              <li key={row.range} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                <span className="text-slate-700">{row.range}</span>
+                <span className="font-semibold text-slate-900">{formatKes(row.kesPerHour)}/hr</span>
+                <span className="w-full text-xs text-slate-500 sm:w-auto">{row.note}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <div className="mt-10 space-y-10">
           {program.sections.map((s) => (

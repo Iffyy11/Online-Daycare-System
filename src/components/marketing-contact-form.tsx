@@ -1,13 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import {
-  SITE_LOCATION_SHORT,
-  SITE_MAILTO_HREF,
-  SITE_PHONE_DISPLAY,
-  SITE_PHONE_HREF,
-  SITE_PUBLIC_EMAIL,
-} from "@/lib/site-contact";
+import { SITE_MAILTO_HREF, SITE_PUBLIC_EMAIL } from "@/lib/site-contact";
 
 export function MarketingContactForm() {
   const [name, setName] = useState("");
@@ -49,19 +43,12 @@ export function MarketingContactForm() {
 
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_20px_60px_-24px_rgba(91,33,182,0.25)] sm:p-8">
-      <div className="mb-5 rounded-2xl border border-violet-100 bg-violet-50/60 px-4 py-3 text-sm text-slate-700">
-        <p className="font-semibold text-violet-900">Visit &amp; contact</p>
-        <p className="mt-1">{SITE_LOCATION_SHORT}, Kenya</p>
-        <p className="mt-2">
-          <a href={SITE_PHONE_HREF} className="font-medium text-violet-800 underline-offset-2 hover:underline">
-            {SITE_PHONE_DISPLAY}
-          </a>
-          <span className="text-slate-400"> · </span>
-          <a href={SITE_MAILTO_HREF} className="font-medium text-violet-800 underline-offset-2 hover:underline">
-            {SITE_PUBLIC_EMAIL}
-          </a>
-        </p>
-      </div>
+      <p className="mb-5 text-xs text-slate-500">
+        Prefer email:{" "}
+        <a href={SITE_MAILTO_HREF} className="font-medium text-violet-800 underline-offset-2 hover:underline">
+          {SITE_PUBLIC_EMAIL}
+        </a>
+      </p>
 
       <form onSubmit={submit}>
         <div className="space-y-4">
@@ -105,7 +92,7 @@ export function MarketingContactForm() {
             <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_API_KEY</code>,{" "}
             <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_FROM</code>, optional{" "}
             <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">CONTACT_INBOX_EMAIL</code>
-            ), then <strong>Redeploy</strong>. Until then, use the phone or email above for a quick reply.
+            ), then <strong>Redeploy</strong>. Until then, use the email above for a quick reply.
           </p>
         ) : null}
         {status === "err" ? (

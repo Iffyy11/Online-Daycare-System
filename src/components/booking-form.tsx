@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { estimateBookingKes, formatKes } from "@/lib/pricing";
 
 type Props = {
   defaultParentEmail?: string;
@@ -41,6 +42,11 @@ export function BookingForm({
   }));
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const priceEstimate = useMemo(
+    () => estimateBookingKes(form.programType, form.dropOffTime, form.pickUpTime),
+    [form.programType, form.dropOffTime, form.pickUpTime],
+  );
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -243,6 +249,23 @@ export function BookingForm({
             />
           </label>
         </div>
+        {priceEstimate ? (
+          <div className="rounded-xl border border-indigo-100 bg-indigo-50/80 px-4 py-3 text-sm text-slate-800">
+            <p className="font-semibold text-indigo-900">
+              Estimated care fee: KES {formatKes(priceEstimate.displayTotalKes)}
+            </p>
+            <p className="mt-1 text-xs text-slate-600">
+              ~{priceEstimate.durationHours}h on site · time-of-day hourly math (peak drop-off / pick-up
+              hours higher). {priceEstimate.summary}
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              Reference package for this program: KES {formatKes(priceEstimate.packageAnchorKes)}. Final
+              amount is confirmed when staff approves your booking.
+            </p>
+          </div>
+        ) : (
+          <p className="text-xs text-slate-500">Enter drop-off and pick-up times to see a fee estimate.</p>
+        )}
       </fieldset>
 
       <fieldset className="space-y-4">

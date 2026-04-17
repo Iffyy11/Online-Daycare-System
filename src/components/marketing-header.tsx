@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { getSession } from "@/lib/auth";
-import { SITE_PHONE_DISPLAY, SITE_PHONE_HREF } from "@/lib/site-contact";
+import { SITE_MAILTO_HREF } from "@/lib/site-contact";
 
 const nav = [
   { href: "/#home", label: "Home" },
@@ -9,17 +9,6 @@ const nav = [
   { href: "/#concerns", label: "Concerns" },
   { href: "/#testimonials", label: "Families" },
 ];
-
-function PhoneIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.58 1 1 0 01-.25 1.01l-2.2 2.2z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
 
 export async function MarketingHeader() {
   const session = await getSession();
@@ -76,18 +65,10 @@ export async function MarketingHeader() {
           </details>
 
           <a
-            href={SITE_PHONE_HREF}
-            className="hidden items-center gap-2 rounded-full bg-[#6d28d9] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:bg-[#5b21b6] sm:inline-flex"
+            href={SITE_MAILTO_HREF}
+            className="hidden rounded-full border border-violet-200 bg-white px-3 py-2 text-xs font-medium text-violet-900 shadow-sm transition hover:bg-violet-50 sm:inline-flex sm:text-sm"
           >
-            <PhoneIcon className="h-4 w-4" />
-            <span>{SITE_PHONE_DISPLAY}</span>
-          </a>
-          <a
-            href={SITE_PHONE_HREF}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#6d28d9] text-white shadow-md sm:hidden"
-            aria-label="Call us"
-          >
-            <PhoneIcon className="h-4 w-4" />
+            Email
           </a>
 
           <Link

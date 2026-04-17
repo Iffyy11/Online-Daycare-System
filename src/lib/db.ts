@@ -303,6 +303,26 @@ export async function prependBookingMongo(booking: Booking): Promise<void> {
   );
 }
 
+/** Prepends community feedback without read-modify-replace of the full snapshot. */
+export async function prependCommunityFeedbackMongo(entry: CommunityFeedback): Promise<void> {
+  const mongo = await getMongoDb();
+  const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
+  const exists = await coll.findOne({ _id: SNAPSHOT_ID }, { projection: { _id: 1 } });
+  if (!exists) {
+    const seed: AppSnapshotDoc = {
+      _id: SNAPSHOT_ID,
+      ...JSON.parse(JSON.stringify(defaultDb)) as AppDatabase,
+    };
+    seed.communityFeedback = [entry, ...seed.communityFeedback];
+    await coll.replaceOne({ _id: SNAPSHOT_ID }, seed, { upsert: true });
+    return;
+  }
+  await coll.updateOne(
+    { _id: SNAPSHOT_ID },
+    { $push: { communityFeedback: { $each: [entry], $position: 0 } } },
+  );
+}
+
 export type BookingMongoPatch = Partial<
   Pick<Booking, "status" | "paymentStatus" | "paymentReference">
 >;

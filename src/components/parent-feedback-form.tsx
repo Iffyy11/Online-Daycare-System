@@ -19,10 +19,11 @@ export function ParentFeedbackForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
       });
-      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      const body = (await res.json().catch(() => ({}))) as { error?: string; hint?: string };
       if (!res.ok) {
         setStatus("err");
-        setMsg(body.error ?? "Could not save feedback.");
+        const detail = [body.error, body.hint].filter(Boolean).join(" ");
+        setMsg(detail || "Could not save feedback.");
         return;
       }
       setStatus("ok");

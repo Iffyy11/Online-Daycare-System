@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
@@ -51,33 +52,55 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid booking data." }, { status: 400 });
   }
 
-  const db = await readDb();
-  const paymentStatus = derivePaymentStatus(parsed.data.paymentMethod);
-  const parentUserId = session.role === "parent" ? session.userId : "";
+  try {
+    const db = await readDb();
+    const paymentStatus = derivePaymentStatus(parsed.data.paymentMethod);
+    const parentUserId = session.role === "parent" ? session.userId : "";
 
-  const booking: Booking = {
-    id: `b${Date.now()}`,
-    parentUserId,
-    parentName: parsed.data.parentName,
-    parentEmail: parsed.data.parentEmail,
-    parentPhone: parsed.data.parentPhone,
-    childName: parsed.data.childName,
-    childAge: parsed.data.childAge,
-    childAllergies: parsed.data.childAllergies ?? "",
-    emergencyContactName: parsed.data.emergencyContactName,
-    emergencyContactPhone: parsed.data.emergencyContactPhone,
-    date: parsed.data.date,
-    dropOffTime: parsed.data.dropOffTime,
-    pickUpTime: parsed.data.pickUpTime,
-    programType: parsed.data.programType,
-    notes: parsed.data.notes ?? "",
-    paymentMethod: parsed.data.paymentMethod,
-    paymentReference: parsed.data.paymentReference ?? "",
-    paymentStatus,
-    status: "pending",
-  };
+    const booking: Booking = {
+      id: `b${Date.now()}`,
+      parentUserId,
+      parentName: parsed.data.parentName,
+      parentEmail: parsed.data.parentEmail,
+      parentPhone: parsed.data.parentPhone,
+      childName: parsed.data.childName,
+      childAge: parsed.data.childAge,
+      childAllergies: parsed.data.childAllergies ?? "",
+      emergencyContactName: parsed.data.emergencyContactName,
+      emergencyContactPhone: parsed.data.emergencyContactPhone,
+      date: parsed.data.date,
+      dropOffTime: parsed.data.dropOffTime,
+      pickUpTime: parsed.data.pickUpTime,
+      programType: parsed.data.programType,
+      notes: parsed.data.notes ?? "",
+      paymentMethod: parsed.data.paymentMethod,
+      paymentReference: parsed.data.paymentReference ?? "",
+      paymentStatus,
+      status: "pending",
+    };
 
-  db.bookings.unshift(booking);
-  await writeDb(db);
-  return NextResponse.json({ data: booking }, { status: 201 });
+    db.bookings.unshift(booking);
+    await writeDb(db);
+    revalidatePath("/bookings");
+    revalidatePath("/dashboard");
+    revalidatePath("/reports");
+    revalidatePath("/parent/bookings");
+    return NextResponse.json({ data: booking }, { status: 201 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not save booking.";
+    if (message.includes("Database not configured for Vercel") || message.includes("MongoDB write failed on Vercel")) {
+      return NextResponse.json(
+        {
+          error: message,
+          hint: "Add MONGODB_URI on Vercel and redeploy so bookings persist and show for staff.",
+        },
+        { status: 503 },
+      );
+    }
+    if (message.includes("MongoDB read failed on Vercel")) {
+      return NextResponse.json({ error: message }, { status: 503 });
+    }
+    console.error("POST /api/bookings", error);
+    return NextResponse.json({ error: "Could not save booking. Please try again." }, { status: 500 });
+  }
 }

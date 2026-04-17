@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
@@ -48,6 +49,10 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
 
     db.bookings[idx] = next;
     await writeDb(db);
+    revalidatePath("/bookings");
+    revalidatePath("/dashboard");
+    revalidatePath("/reports");
+    revalidatePath("/parent/bookings");
     return NextResponse.json({ data: next });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown server error";

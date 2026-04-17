@@ -40,20 +40,27 @@ export function BookingForm({ defaultParentEmail = "", defaultParentName = "" }:
     event.preventDefault();
     setError("");
     setSuccess(false);
-    const response = await fetch("/api/bookings", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const body = (await response.json().catch(() => ({}))) as { error?: string; hint?: string };
 
-    if (!response.ok) {
-      setError("Unable to create booking. Check all required fields.");
-      return;
+      if (!response.ok) {
+        const base = body.error ?? "Unable to create booking. Check all required fields.";
+        const hint = body.hint ? ` ${body.hint}` : "";
+        setError((base + hint).trim());
+        return;
+      }
+
+      setForm({ ...emptyForm, parentEmail: defaultParentEmail, parentName: defaultParentName });
+      setSuccess(true);
+      router.refresh();
+    } catch {
+      setError("Could not reach the server. Check your connection and try again.");
     }
-
-    setForm({ ...emptyForm, parentEmail: defaultParentEmail, parentName: defaultParentName });
-    setSuccess(true);
-    router.refresh();
   };
 
   const inputClass =

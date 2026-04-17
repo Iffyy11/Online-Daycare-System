@@ -277,10 +277,15 @@ export async function readDb(): Promise<AppDatabase> {
       return await readMongoSnapshot();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown Mongo read error";
-      console.warn(`Mongo read failed, falling back to JSON DB: ${message}`);
+      console.warn(`Mongo read failed: ${message}`);
+      // On Vercel, never fall back to bundled JSON when Mongo is configured — that snapshot would hide
+      // new sign-ups/bookings and look like the admin UI is "not updating".
       if (isVercel) {
-        return readBundledJsonDb();
+        throw new Error(
+          `MongoDB read failed on Vercel (${message}). Fix MONGODB_URI / network access; bundled demo data would not include live bookings.`,
+        );
       }
+      return readJsonDb();
     }
   }
   if (isVercel && !isMongoEnabled()) {

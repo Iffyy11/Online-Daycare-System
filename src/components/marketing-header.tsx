@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
-import { SITE_MAILTO_HREF } from "@/lib/site-contact";
 
 const nav = [
   { href: "/#home", label: "Home" },
@@ -57,13 +56,6 @@ export function MarketingHeader() {
               </a>
             </div>
           </details>
-
-          <a
-            href={SITE_MAILTO_HREF}
-            className="hidden rounded-full border border-violet-200 bg-white px-3 py-2 text-xs font-medium text-violet-900 shadow-sm transition hover:bg-violet-50 sm:inline-flex sm:text-sm"
-          >
-            Email
-          </a>
 
           <Link
             href="/login"

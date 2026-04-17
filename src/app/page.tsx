@@ -6,7 +6,6 @@ import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
 import { formatNairobiDateShort } from "@/lib/nairobi-time";
 import { formatKes } from "@/lib/pricing";
-import { SITE_MAILTO_HREF, SITE_PUBLIC_EMAIL } from "@/lib/site-contact";
 import { readDb } from "@/lib/db";
 import { PROGRAMS } from "@/lib/programs-data";
 import "./marketing.css";
@@ -105,10 +104,10 @@ export default async function HomePage() {
                 Parent sign up
               </Link>
               <a
-                href={SITE_MAILTO_HREF}
+                href="/#contact"
                 className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-violet-200 hover:bg-violet-50/80"
               >
-                Email us
+                Contact us
               </a>
             </div>
             <p className="mt-6 text-sm text-slate-500">
@@ -289,17 +288,9 @@ export default async function HomePage() {
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                 Reach out and start your child&apos;s journey with us
               </h2>
-              <p className="mt-4">
-                <a
-                  href={SITE_MAILTO_HREF}
-                  className="inline-flex rounded-full bg-[#6d28d9] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition hover:bg-[#5b21b6]"
-                >
-                  Email {SITE_PUBLIC_EMAIL}
-                </a>
-              </p>
-              <p className="mt-4 text-xs leading-relaxed text-slate-500">
-                Campus address and direct line are shared with enrolled families. General questions welcome by
-                email.
+              <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                Send a message using the form — we&apos;ll get back to you soon. Campus address and direct line
+                are shared with enrolled families.
               </p>
             </div>
             <MarketingContactForm />

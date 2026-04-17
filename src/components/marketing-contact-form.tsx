@@ -1,8 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { SITE_MAILTO_HREF, SITE_PUBLIC_EMAIL } from "@/lib/site-contact";
-
 export function MarketingContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,13 +41,6 @@ export function MarketingContactForm() {
 
   return (
     <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_20px_60px_-24px_rgba(91,33,182,0.25)] sm:p-8">
-      <p className="mb-5 text-xs text-slate-500">
-        Prefer email:{" "}
-        <a href={SITE_MAILTO_HREF} className="font-medium text-violet-800 underline-offset-2 hover:underline">
-          {SITE_PUBLIC_EMAIL}
-        </a>
-      </p>
-
       <form onSubmit={submit}>
         <div className="space-y-4">
           <input
@@ -92,20 +83,13 @@ export function MarketingContactForm() {
             <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_API_KEY</code>,{" "}
             <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">RESEND_FROM</code>, optional{" "}
             <code className="rounded bg-amber-100/80 px-1 py-0.5 text-xs">CONTACT_INBOX_EMAIL</code>
-            ), then <strong>Redeploy</strong>. Until then, use the email above for a quick reply.
+            ), then <strong>Redeploy</strong>. Until then, we still save your message on the server.
           </p>
         ) : null}
         {status === "err" ? (
           <p className="mt-4 text-sm text-rose-600">
             <span className="block font-medium">
               {errDetail || "Something went wrong. Please try again."}
-            </span>
-            <span className="mt-2 block">
-              You can also call us or email{" "}
-              <a href={SITE_MAILTO_HREF} className="font-medium underline">
-                {SITE_PUBLIC_EMAIL}
-              </a>
-              .
             </span>
           </p>
         ) : null}

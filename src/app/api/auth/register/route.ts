@@ -19,26 +19,41 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid registration data." }, { status: 400 });
   }
 
-  const db = await readDb();
-  const email = parsed.data.email.toLowerCase();
-  if (db.users.some((u) => u.email.toLowerCase() === email)) {
-    return NextResponse.json({ error: "An account with this email already exists." }, { status: 409 });
+  try {
+    const db = await readDb();
+    const email = parsed.data.email.toLowerCase();
+    if (db.users.some((u) => u.email.toLowerCase() === email)) {
+      return NextResponse.json({ error: "An account with this email already exists." }, { status: 409 });
+    }
+
+    const passwordHash = await hash(parsed.data.password, BCRYPT_ROUNDS);
+    const user = {
+      id: `pu_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      name: parsed.data.name.trim(),
+      email,
+      passwordHash,
+      role: "parent" as const,
+    };
+
+    db.users.push(user);
+    await writeDb(db);
+
+    return NextResponse.json(
+      { data: { id: user.id, email: user.email, name: user.name, role: user.role } },
+      { status: 201 },
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Registration failed.";
+    if (message.includes("Database not configured for Vercel") || message.includes("MongoDB write failed on Vercel")) {
+      return NextResponse.json(
+        {
+          error: message,
+          hint: "In Vercel: Project → Settings → Environment Variables → add MONGODB_URI, redeploy, then try again.",
+        },
+        { status: 503 },
+      );
+    }
+    console.error("POST /api/auth/register", error);
+    return NextResponse.json({ error: "Registration could not be completed. Please try again." }, { status: 500 });
   }
-
-  const passwordHash = await hash(parsed.data.password, BCRYPT_ROUNDS);
-  const user = {
-    id: `pu_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
-    name: parsed.data.name.trim(),
-    email: parsed.data.email.trim(),
-    passwordHash,
-    role: "parent" as const,
-  };
-
-  db.users.push(user);
-  await writeDb(db);
-
-  return NextResponse.json(
-    { data: { id: user.id, email: user.email, name: user.name, role: user.role } },
-    { status: 201 },
-  );
 }

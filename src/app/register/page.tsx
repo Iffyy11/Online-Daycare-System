@@ -17,19 +17,26 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const data = (await res.json()) as { error?: string };
-    setLoading(false);
-    if (!res.ok) {
-      setError(data.error ?? "Registration failed.");
-      return;
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string; hint?: string };
+      if (!res.ok) {
+        const base = data.error ?? "Registration failed.";
+        const hint = data.hint ? ` ${data.hint}` : "";
+        setError((base + hint).trim());
+        return;
+      }
+      router.push("/login?registered=1");
+      router.refresh();
+    } catch {
+      setError("Could not reach the server. Check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
-    router.push("/login?registered=1");
-    router.refresh();
   };
 
   const inputClass =

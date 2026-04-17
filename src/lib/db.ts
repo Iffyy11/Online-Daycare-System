@@ -17,8 +17,11 @@ const PAYMENT_METHODS: Booking["paymentMethod"][] = ["mpesa", "cash"];
 const PAYMENT_STATUSES: Booking["paymentStatus"][] = ["unpaid", "pending_verification", "paid"];
 const BOOKING_STATUSES: Booking["status"][] = ["pending", "approved", "declined"];
 const PROGRESS_CATEGORIES: ProgressCategory[] = ["learning", "social", "wellbeing", "general"];
-const ADMIN_PASSWORD_HASH = "$2b$10$psuKpdtGmLOc4oDZSRaUz.R7n4ruFic2XxERkdUkZrD3wNMvXX9OS";
-const TEACHER_PASSWORD_HASH = "$2b$10$B6tnR1y18/KxcxrEq8WhPOkPH/g1w1MUaJk7WWTlAlbSEOG3hXsaS";
+/** Precomputed with bcryptjs rounds=10 for default seed accounts (avoids sync hash on cold start). */
+const ADMIN_PASSWORD_HASH = "$2b$10$oev4/yqExRj/ATkdNQEpFOBOu7CbRf5X7ZnEVkHQg3ylsKivPgnsy";
+const TEACHER_PASSWORD_HASH = "$2b$10$R3G7SYvZLVOx7UlAqQtW9eUXXbNNqgJ90VmDj/vKx6Ly7HI6ylkbO";
+
+const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
 
 const SNAPSHOT_ID = "app" as const;
 const SNAPSHOT_COLLECTION = "app_snapshot";
@@ -224,6 +227,16 @@ async function ensureJsonFile() {
   }
 }
 
+/** Read-only snapshot shipped with the app (works on Vercel without writable disk). */
+async function readBundledJsonDb(): Promise<AppDatabase> {
+  try {
+    const raw = await fs.readFile(projectDbPath, "utf-8");
+    return normalizeAppDatabase(JSON.parse(raw) as AppDatabase);
+  } catch {
+    return normalizeAppDatabase(JSON.parse(JSON.stringify(defaultDb)) as AppDatabase);
+  }
+}
+
 async function readJsonDb(): Promise<AppDatabase> {
   await ensureJsonFile();
   const raw = await fs.readFile(dbPath, "utf-8");
@@ -265,7 +278,13 @@ export async function readDb(): Promise<AppDatabase> {
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown Mongo read error";
       console.warn(`Mongo read failed, falling back to JSON DB: ${message}`);
+      if (isVercel) {
+        return readBundledJsonDb();
+      }
     }
+  }
+  if (isVercel && !isMongoEnabled()) {
+    return readBundledJsonDb();
   }
   return readJsonDb();
 }
@@ -278,8 +297,17 @@ export async function writeDb(data: AppDatabase): Promise<void> {
       return;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown Mongo write error";
-      console.warn(`Mongo write failed, falling back to JSON DB: ${message}`);
+      console.warn(`Mongo write failed: ${message}`);
+      if (isVercel) {
+        throw new Error(
+          `MongoDB write failed on Vercel (${message}). Fix MONGODB_URI / database access. File-based storage is not supported for writes on Vercel.`,
+        );
+      }
     }
+  } else if (isVercel) {
+    throw new Error(
+      "Database not configured for Vercel: set MONGODB_URI (and optionally MONGODB_DB) in Project → Settings → Environment Variables, then redeploy. Sign-up and other saves require MongoDB on Vercel.",
+    );
   }
   await writeJsonDb(normalized);
 }

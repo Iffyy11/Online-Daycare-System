@@ -1,17 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import { MarketingContactForm } from "@/components/marketing-contact-form";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
 import { formatKes } from "@/lib/pricing";
 import { PROGRAMS } from "@/lib/programs-data";
-import "./marketing.css";
 
-const marketingSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+/** One static HTML snapshot for `/` — same for anonymous visitors and logged-in parents. */
+export const dynamic = "force-static";
 
 function ChatBubbleIcon({ className }: { className?: string }) {
   return (
@@ -28,9 +24,7 @@ function ChatBubbleIcon({ className }: { className?: string }) {
 
 export default function HomePage() {
   return (
-    <div
-      className={`${marketingSans.className} min-h-screen bg-[var(--brand-surface)] text-slate-900 antialiased`}
-    >
+    <>
       <MarketingHeader />
 
       <main className="relative overflow-x-hidden">
@@ -248,6 +242,6 @@ export default function HomePage() {
       >
         <ChatBubbleIcon className="h-6 w-6" />
       </a>
-    </div>
+    </>
   );
 }

@@ -1,8 +1,13 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { readDb, writeDb } from "@/lib/db";
 import type { ProgressCategory } from "@/lib/types";
+
+function isStaff(role: string): boolean {
+  return role === "admin" || role === "teacher";
+}
 
 const schema = z.object({
   childId: z.string().min(1),
@@ -13,8 +18,8 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   const session = await getSession();
-  if (!session || session.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!session || !isStaff(session.role)) {
+    return NextResponse.json({ error: "Only staff can log progress." }, { status: 403 });
   }
 
   const parsed = schema.safeParse(await request.json());
@@ -38,6 +43,23 @@ export async function POST(request: Request) {
     recordedByName: session.name,
   };
   db.progress.unshift(entry);
-  await writeDb(db);
+  try {
+    await writeDb(db);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Save failed.";
+    console.error("POST /api/staff/progress", err);
+    return NextResponse.json(
+      {
+        error: message.includes("MongoDB") ? message : "Could not save to the database.",
+        hint: message.includes("Vercel") || message.includes("MongoDB")
+          ? "Confirm MONGODB_URI on the server and redeploy."
+          : undefined,
+      },
+      { status: 503 },
+    );
+  }
+  revalidatePath("/children");
+  revalidatePath("/parent/my-children");
+  revalidatePath(`/parent/my-children/${parsed.data.childId}`);
   return NextResponse.json({ data: entry }, { status: 201 });
 }

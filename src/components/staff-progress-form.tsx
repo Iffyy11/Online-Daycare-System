@@ -23,8 +23,17 @@ export function StaffProgressForm({ childrenList }: { childrenList: ChildOption[
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ childId, title, detail, category }),
     });
+    const body = (await res.json().catch(() => ({}))) as { error?: string; hint?: string };
     if (!res.ok) {
-      setError("Could not save progress.");
+      const hint = body.hint ? ` ${body.hint}` : "";
+      setError(
+        (body.error ??
+          (res.status === 403
+            ? "You don’t have permission to save progress (staff only)."
+            : res.status === 404
+              ? "Child not found on the roster."
+              : "Could not save progress. Try again.")) + hint,
+      );
       return;
     }
     setTitle("");

@@ -28,6 +28,9 @@ export function MarketingFooter() {
               <Link href="/programs" className="text-slate-600 transition hover:text-violet-700">
                 Programs
               </Link>
+              <Link href="/feedback" className="text-slate-600 transition hover:text-violet-700">
+                Parent feedback
+              </Link>
               <Link href="/register" className="text-slate-600 transition hover:text-violet-700">
                 Parent sign up
               </Link>

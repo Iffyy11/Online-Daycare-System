@@ -4,26 +4,14 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { MarketingContactForm } from "@/components/marketing-contact-form";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
-import { formatNairobiDateShort } from "@/lib/nairobi-time";
 import { formatKes } from "@/lib/pricing";
-import { readDb } from "@/lib/db";
 import { PROGRAMS } from "@/lib/programs-data";
 import "./marketing.css";
-
-export const dynamic = "force-dynamic";
 
 const marketingSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-
-function QuoteIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M6 7H3v9h6v-5l-3-4zm12 0h-3v9h6v-5l-3-4z" />
-    </svg>
-  );
-}
 
 function ChatBubbleIcon({ className }: { className?: string }) {
   return (
@@ -38,36 +26,7 @@ function ChatBubbleIcon({ className }: { className?: string }) {
   );
 }
 
-const testimonials = [
-  {
-    quote:
-      "Daycare Pro has been a blessing for our family. My son is always excited to go, and I love the activities that encourage his development.",
-    name: "Sarah K.",
-    role: "Parent of two",
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop",
-  },
-  {
-    quote:
-      "The care and attention my daughter receives is unmatched. Healthy snacks and a fun, engaging learning environment — we see it every day.",
-    name: "Michael P.",
-    role: "First-time dad",
-    src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop",
-  },
-  {
-    quote:
-      "It's comforting to know our children are safe and growing every day. The team communicates clearly — highly recommended.",
-    name: "Linda J.",
-    role: "Working parent",
-    src: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=96&h=96&fit=crop",
-  },
-];
-
-export default async function HomePage() {
-  const db = await readDb();
-  const community = [...db.communityFeedback].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
-
+export default function HomePage() {
   return (
     <div
       className={`${marketingSans.className} min-h-screen bg-[var(--brand-surface)] text-slate-900 antialiased`}
@@ -208,74 +167,30 @@ export default async function HomePage() {
         </section>
 
         <section
-          id="testimonials"
-          className="marketing-gradient-purple scroll-mt-24 py-20 text-white sm:py-24"
+          id="feedback"
+          className="scroll-mt-24 border-b border-slate-100 bg-gradient-to-b from-white to-[var(--brand-mist)]/40 py-14 sm:py-20"
         >
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="mx-auto max-w-3xl text-center text-3xl font-bold leading-tight sm:text-4xl">
-              What families are saying about Daycare Pro
+          <div className="mx-auto max-w-6xl px-4 text-center sm:px-6">
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              Hear from registered parents
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-center text-sm text-violet-100 sm:text-base">
-              Real words from a demo experience — your center can make this story your own.
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600 sm:text-base">
+              We publish feedback shared by signed-in parents — real messages from our community, not sample
+              quotes.
             </p>
-            <div className="mt-14 grid gap-8 md:grid-cols-3">
-              {testimonials.map((t) => (
-                <blockquote
-                  key={t.name}
-                  className="stamp-edge flex h-full flex-col bg-white p-7 text-slate-800 transition hover:-translate-y-1"
-                >
-                  <QuoteIcon className="h-8 w-8 text-violet-200" />
-                  <p className="mt-4 flex-1 text-sm leading-relaxed text-slate-600">&ldquo;{t.quote}&rdquo;</p>
-                  <footer className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
-                    <Image
-                      src={t.src}
-                      alt=""
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-full object-cover ring-2 ring-violet-100"
-                    />
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{t.name}</p>
-                      <p className="text-xs text-slate-500">{t.role}</p>
-                    </div>
-                  </footer>
-                </blockquote>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="border-b border-slate-100 bg-gradient-to-b from-white to-[var(--brand-mist)]/40 py-14 sm:py-20">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-              Voices from our families
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-slate-600 sm:text-base">
-              Parents who are signed in can share feedback from the portal — it appears here for everyone
-              visiting our site.
+            <Link
+              href="/feedback"
+              className="mt-8 inline-flex rounded-full bg-[#6d28d9] px-7 py-3.5 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:bg-[#5b21b6]"
+            >
+              View parent feedback
+            </Link>
+            <p className="mt-6 text-sm text-slate-500">
+              Registered?{" "}
+              <Link href="/parent/feedback" className="font-medium text-violet-700 underline-offset-2 hover:underline">
+                Post feedback from your portal
+              </Link>
+              .
             </p>
-            {community.length === 0 ? (
-              <p className="mx-auto mt-10 max-w-md rounded-2xl border border-dashed border-violet-200 bg-violet-50/40 px-4 py-6 text-center text-sm text-slate-600">
-                No community notes yet.{" "}
-                <Link href="/register" className="font-semibold text-violet-800 hover:underline">
-                  Register
-                </Link>{" "}
-                and post from your parent dashboard.
-              </p>
-            ) : (
-              <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {community.slice(0, 9).map((c) => (
-                  <li
-                    key={c.id}
-                    className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm ring-1 ring-violet-50"
-                  >
-                    <p className="text-sm leading-relaxed text-slate-700">&ldquo;{c.content}&rdquo;</p>
-                    <p className="mt-4 text-xs font-semibold text-violet-800">— {c.authorName}</p>
-                    <p className="mt-1 text-xs text-slate-400">{formatNairobiDateShort(c.createdAt)}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
         </section>
 

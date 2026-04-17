@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 declare global {
   // eslint-disable-next-line no-var -- Next.js dev HMR: reuse one client promise
@@ -32,9 +32,17 @@ export async function getMongoClient(): Promise<MongoClient> {
   }
   if (!global.__daycareMongoClientPromise) {
     const client = new MongoClient(uri, {
-      // Keep auth/register routes responsive when Mongo is unreachable.
-      serverSelectionTimeoutMS: 1500,
-      connectTimeoutMS: 1500,
+      // Atlas + Node on serverless: avoids IPv4/IPv6 mismatch TLS failures (alert 80) on some hosts.
+      autoSelectFamily: false,
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      },
+      maxPoolSize: 10,
+      minPoolSize: 0,
+      serverSelectionTimeoutMS: 10_000,
+      connectTimeoutMS: 10_000,
     });
     global.__daycareMongoClientPromise = client.connect();
   }

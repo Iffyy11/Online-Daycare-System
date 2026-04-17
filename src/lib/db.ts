@@ -339,6 +339,76 @@ export async function patchBookingMongo(bookingId: string, patch: BookingMongoPa
   return true;
 }
 
+function normalizeChildNameKey(name: string): string {
+  return name.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+/** Parent account on the booking, or match parent user by email (staff-entered booking). */
+function resolveParentUserIdForBooking(db: AppDatabase, booking: Booking): string | null {
+  const direct = booking.parentUserId?.trim();
+  if (direct) return direct;
+  const email = booking.parentEmail?.trim().toLowerCase();
+  if (!email) return null;
+  const user = db.users.find((u) => u.email.toLowerCase() === email && u.role === "parent");
+  return user?.id ?? null;
+}
+
+async function pushChildMongo(child: Child): Promise<void> {
+  const mongo = await getMongoDb();
+  const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
+  const exists = await coll.findOne({ _id: SNAPSHOT_ID }, { projection: { _id: 1 } });
+  if (!exists) {
+    const seed: AppSnapshotDoc = {
+      _id: SNAPSHOT_ID,
+      ...(JSON.parse(JSON.stringify(defaultDb)) as AppDatabase),
+    };
+    seed.children = [...seed.children, child];
+    await coll.replaceOne({ _id: SNAPSHOT_ID }, seed, { upsert: true });
+    return;
+  }
+  await coll.updateOne({ _id: SNAPSHOT_ID }, { $push: { children: child } });
+}
+
+/**
+ * When staff approves a booking, ensure a roster child exists for that parent (My children).
+ * Skips if the same parent already has a child with the same name.
+ */
+export async function ensureChildFromApprovedBooking(booking: Booking): Promise<void> {
+  if (booking.status !== "approved") return;
+
+  const db = await readDb();
+  const parentUserId = resolveParentUserIdForBooking(db, booking);
+  if (!parentUserId) return;
+
+  const nameKey = normalizeChildNameKey(booking.childName);
+  const dup = db.children.some(
+    (c) => c.parentUserId === parentUserId && normalizeChildNameKey(c.name) === nameKey,
+  );
+  if (dup) return;
+
+  const age = Math.min(18, Math.max(0, Number.parseInt(String(booking.childAge), 10) || 0));
+  const allergyRaw = booking.childAllergies?.trim();
+  const allergies =
+    allergyRaw && allergyRaw.toLowerCase() !== "none" ? allergyRaw : undefined;
+
+  const child = normalizeChild({
+    id: `c_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+    name: booking.childName.trim(),
+    age,
+    classroom: "Pending assignment",
+    allergies,
+    parentUserId,
+  } as unknown as Record<string, unknown>);
+
+  if (isMongoEnabled()) {
+    await pushChildMongo(child);
+    return;
+  }
+
+  db.children.push(child);
+  await writeDb(db);
+}
+
 /**
  * Full app state. Uses MongoDB when `MONGODB_URI` is set; otherwise `data/db.json`.
  */

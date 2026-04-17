@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { patchBookingMongo, readDb, writeDb } from "@/lib/db";
+import { ensureChildFromApprovedBooking, patchBookingMongo, readDb, writeDb } from "@/lib/db";
 import { isMongoEnabled } from "@/lib/mongo-client";
 import type { Booking } from "@/lib/types";
 
@@ -43,11 +43,13 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
       if (!next) {
         return NextResponse.json({ error: "Booking not found." }, { status: 404 });
       }
+      await ensureChildFromApprovedBooking(next);
       revalidatePath("/bookings");
       revalidatePath("/dashboard");
       revalidatePath("/reports");
       revalidatePath("/parent/bookings");
       revalidatePath("/parent/dashboard");
+      revalidatePath("/parent/my-children");
       return NextResponse.json({ data: next });
     }
 
@@ -72,11 +74,13 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
 
     db.bookings[idx] = next;
     await writeDb(db);
+    await ensureChildFromApprovedBooking(next);
     revalidatePath("/bookings");
     revalidatePath("/dashboard");
     revalidatePath("/reports");
     revalidatePath("/parent/bookings");
     revalidatePath("/parent/dashboard");
+    revalidatePath("/parent/my-children");
     return NextResponse.json({ data: next });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown server error";

@@ -14,8 +14,9 @@ export default async function ParentMyChildrenPage() {
         <p className="text-sm font-semibold uppercase tracking-wide text-violet-600">Your family</p>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">My children</h1>
         <p className="max-w-2xl text-slate-600">
-          Profiles belong only to your account. Staff assign classrooms and post progress you can read
-          on each child&apos;s page.
+          Profiles belong only to your account. When the center <strong>approves a booking</strong> you
+          submitted while logged in, we add that child here automatically (or add one manually below).
+          Staff assign classrooms and post progress on each child&apos;s page.
         </p>
       </header>
 

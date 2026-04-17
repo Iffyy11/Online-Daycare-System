@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
-import { getSession } from "@/lib/auth";
 import { SITE_MAILTO_HREF } from "@/lib/site-contact";
 
 const nav = [
@@ -10,13 +9,8 @@ const nav = [
   { href: "/#testimonials", label: "Families" },
 ];
 
-export async function MarketingHeader() {
-  const session = await getSession();
-  const dashboardHref =
-    session?.role === "parent" ? "/parent/dashboard" : session ? "/dashboard" : "/login";
-  const ctaHref = session ? dashboardHref : "/register";
-  const ctaLabel = session ? "My portal" : "Sign up";
-
+/** Same header for every visitor (logged in or not) so the marketing site stays consistent. */
+export function MarketingHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-violet-100/80 bg-white/85 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-[4.25rem] sm:px-6">
@@ -78,10 +72,10 @@ export async function MarketingHeader() {
             Log in
           </Link>
           <Link
-            href={ctaHref}
+            href="/register"
             className="rounded-full border border-violet-200 bg-violet-50 px-3 py-2 text-sm font-semibold text-violet-900 transition hover:bg-violet-100 sm:px-4"
           >
-            {ctaLabel}
+            Sign up
           </Link>
         </div>
       </div>

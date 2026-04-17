@@ -2,7 +2,8 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { readDb, writeDb } from "@/lib/db";
+import { prependBookingMongo, readDb, writeDb } from "@/lib/db";
+import { isMongoEnabled } from "@/lib/mongo-client";
 import type { Booking } from "@/lib/types";
 
 const bookingSchema = z.object({
@@ -53,7 +54,6 @@ export async function POST(request: Request) {
   }
 
   try {
-    const db = await readDb();
     const paymentStatus = derivePaymentStatus(parsed.data.paymentMethod);
     const parentUserId = session.role === "parent" ? session.userId : "";
 
@@ -79,12 +79,18 @@ export async function POST(request: Request) {
       status: "pending",
     };
 
-    db.bookings.unshift(booking);
-    await writeDb(db);
+    if (isMongoEnabled()) {
+      await prependBookingMongo(booking);
+    } else {
+      const db = await readDb();
+      db.bookings.unshift(booking);
+      await writeDb(db);
+    }
     revalidatePath("/bookings");
     revalidatePath("/dashboard");
     revalidatePath("/reports");
     revalidatePath("/parent/bookings");
+    revalidatePath("/parent/dashboard");
     return NextResponse.json({ data: booking }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not save booking.";

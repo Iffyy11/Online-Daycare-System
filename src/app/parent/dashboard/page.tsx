@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { readDb } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 const offerings = [
   {
     title: "Play & learning",

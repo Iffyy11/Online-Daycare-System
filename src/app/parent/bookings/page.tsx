@@ -37,6 +37,7 @@ export default async function ParentBookingsPage() {
           key={session!.email}
           defaultParentEmail={session!.email}
           defaultParentName={session!.name}
+          successRedirectHref="/parent/dashboard"
         />
       </div>
 

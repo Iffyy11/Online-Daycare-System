@@ -5,6 +5,8 @@ import { AppPageShell } from "@/components/app-page-shell";
 import { paymentMethodLabel, paymentStatusLabel } from "@/lib/booking-labels";
 import { readDb } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 function statusPill(status: string) {
   switch (status) {
     case "approved":
@@ -113,7 +115,7 @@ export default async function AdminDashboardPage() {
           <p className="mt-1 text-xs text-violet-800/90">Confirm receipts &amp; references</p>
         </article>
         <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:col-span-2 xl:col-span-1">
-          <p className="text-sm font-medium text-slate-500">Unpaid (pay later / open)</p>
+          <p className="text-sm font-medium text-slate-500">Unpaid (cash / not yet verified)</p>
           <p className="mt-2 text-3xl font-bold tabular-nums text-slate-900">{unpaidCount}</p>
           <p className="mt-1 text-xs text-slate-600">Follow up from Bookings or Messages</p>
         </article>

@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 type Props = {
   defaultParentEmail?: string;
   defaultParentName?: string;
+  /** After success, go here (e.g. parent dashboard). Staff booking form should omit this. */
+  successRedirectHref?: string;
 };
 
 const emptyForm = {
@@ -26,7 +28,11 @@ const emptyForm = {
   paymentReference: "",
 };
 
-export function BookingForm({ defaultParentEmail = "", defaultParentName = "" }: Props) {
+export function BookingForm({
+  defaultParentEmail = "",
+  defaultParentName = "",
+  successRedirectHref,
+}: Props) {
   const router = useRouter();
   const [form, setForm] = useState(() => ({
     ...emptyForm,
@@ -58,6 +64,9 @@ export function BookingForm({ defaultParentEmail = "", defaultParentName = "" }:
       setForm({ ...emptyForm, parentEmail: defaultParentEmail, parentName: defaultParentName });
       setSuccess(true);
       router.refresh();
+      if (successRedirectHref) {
+        router.push(successRedirectHref);
+      }
     } catch {
       setError("Could not reach the server. Check your connection and try again.");
     }

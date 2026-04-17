@@ -268,6 +268,62 @@ async function writeMongoSnapshot(data: AppDatabase): Promise<void> {
   await coll.replaceOne({ _id: SNAPSHOT_ID }, doc, { upsert: true });
 }
 
+/** Prepends a booking without read-modify-replace (avoids lost rows when parents submit at the same time). */
+export async function prependBookingMongo(booking: Booking): Promise<void> {
+  const mongo = await getMongoDb();
+  const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
+  const exists = await coll.findOne({ _id: SNAPSHOT_ID }, { projection: { _id: 1 } });
+  if (!exists) {
+    const seed: AppSnapshotDoc = {
+      _id: SNAPSHOT_ID,
+      ...JSON.parse(JSON.stringify(defaultDb)) as AppDatabase,
+    };
+    seed.bookings = [booking, ...seed.bookings];
+    await coll.replaceOne({ _id: SNAPSHOT_ID }, seed, { upsert: true });
+    return;
+  }
+  await coll.updateOne(
+    { _id: SNAPSHOT_ID },
+    { $push: { bookings: { $each: [booking], $position: 0 } } },
+  );
+}
+
+export type BookingMongoPatch = Partial<
+  Pick<Booking, "status" | "paymentStatus" | "paymentReference">
+>;
+
+/** Updates one booking by id using array filters (avoids clobbering other concurrent edits). */
+export async function patchBookingMongo(bookingId: string, patch: BookingMongoPatch): Promise<boolean> {
+  const mongo = await getMongoDb();
+  const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
+  const has = await coll.findOne(
+    { _id: SNAPSHOT_ID, bookings: { $elemMatch: { id: bookingId } } },
+    { projection: { _id: 1 } },
+  );
+  if (!has) {
+    return false;
+  }
+  const $set: Record<string, unknown> = {};
+  if (patch.status !== undefined) {
+    $set["bookings.$[b].status"] = patch.status;
+  }
+  if (patch.paymentStatus !== undefined) {
+    $set["bookings.$[b].paymentStatus"] = patch.paymentStatus;
+  }
+  if (patch.paymentReference !== undefined) {
+    $set["bookings.$[b].paymentReference"] = patch.paymentReference;
+  }
+  if (Object.keys($set).length === 0) {
+    return false;
+  }
+  await coll.updateOne(
+    { _id: SNAPSHOT_ID },
+    { $set },
+    { arrayFilters: [{ "b.id": bookingId }] },
+  );
+  return true;
+}
+
 /**
  * Full app state. Uses MongoDB when `MONGODB_URI` is set; otherwise `data/db.json`.
  */

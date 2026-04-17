@@ -2,7 +2,8 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { readDb, writeDb } from "@/lib/db";
+import { patchBookingMongo, readDb, writeDb } from "@/lib/db";
+import { isMongoEnabled } from "@/lib/mongo-client";
 import type { Booking } from "@/lib/types";
 
 const patchSchema = z
@@ -26,6 +27,28 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
     const parsed = patchSchema.safeParse(await request.json());
     if (!parsed.success) {
       return NextResponse.json({ error: "Invalid update." }, { status: 400 });
+    }
+
+    if (isMongoEnabled()) {
+      const ok = await patchBookingMongo(id, {
+        status: parsed.data.status,
+        paymentStatus: parsed.data.paymentStatus,
+        paymentReference: parsed.data.paymentReference,
+      });
+      if (!ok) {
+        return NextResponse.json({ error: "Booking not found." }, { status: 404 });
+      }
+      const db = await readDb();
+      const next = db.bookings.find((b) => b.id === id);
+      if (!next) {
+        return NextResponse.json({ error: "Booking not found." }, { status: 404 });
+      }
+      revalidatePath("/bookings");
+      revalidatePath("/dashboard");
+      revalidatePath("/reports");
+      revalidatePath("/parent/bookings");
+      revalidatePath("/parent/dashboard");
+      return NextResponse.json({ data: next });
     }
 
     const db = await readDb();
@@ -53,6 +76,7 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
     revalidatePath("/dashboard");
     revalidatePath("/reports");
     revalidatePath("/parent/bookings");
+    revalidatePath("/parent/dashboard");
     return NextResponse.json({ data: next });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown server error";

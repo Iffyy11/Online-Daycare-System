@@ -5,6 +5,8 @@ import { getSession } from "@/lib/auth";
 import { paymentMethodLabel, paymentStatusLabel } from "@/lib/booking-labels";
 import { readDb } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 function statusStyle(status: string) {
   switch (status) {
     case "approved":

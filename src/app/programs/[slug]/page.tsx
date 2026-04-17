@@ -27,7 +27,7 @@ export default async function ProgramDetailPage({ params }: Props) {
       <article className="mx-auto max-w-3xl">
         <Link
           href="/programs"
-          className="text-sm font-semibold text-violet-700 underline-offset-2 hover:underline"
+          className="text-sm font-medium text-slate-900 underline-offset-2 hover:underline"
         >
           ← All programs
         </Link>
@@ -45,7 +45,7 @@ export default async function ProgramDetailPage({ params }: Props) {
           </p>
         </header>
 
-        <div className="relative mt-8 aspect-[2/1] w-full overflow-hidden rounded-2xl ring-1 ring-violet-100">
+        <div className="relative mt-8 aspect-[2/1] w-full overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
           <Image
             src={program.image}
             alt={program.imageAlt}
@@ -60,7 +60,7 @@ export default async function ProgramDetailPage({ params }: Props) {
           {program.highlights.map((h) => (
             <li
               key={h}
-              className="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-900 ring-1 ring-violet-100"
+              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-800 ring-1 ring-slate-200"
             >
               {h}
             </li>
@@ -93,18 +93,18 @@ export default async function ProgramDetailPage({ params }: Props) {
           ))}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-violet-100 bg-violet-50/50 p-6 text-center">
+        <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm">
           <p className="text-sm font-medium text-slate-800">Ready to enroll or ask a question?</p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link
               href="/register"
-              className="inline-flex rounded-full bg-[#6d28d9] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#5b21b6]"
+              className="inline-flex rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
             >
               Parent sign up
             </Link>
             <Link
               href="/#contact"
-              className="inline-flex rounded-full border border-violet-200 bg-white px-5 py-2.5 text-sm font-semibold text-violet-900 hover:bg-violet-50"
+              className="inline-flex rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
             >
               Contact us
             </Link>

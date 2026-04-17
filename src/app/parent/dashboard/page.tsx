@@ -3,26 +3,9 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
+import { MARKETING_OFFERINGS } from "@/lib/marketing-offerings";
 
 export const dynamic = "force-dynamic";
-
-const offerings = [
-  {
-    title: "Play & learning",
-    desc: "Age-based rooms, circle time, and creative activities.",
-    img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=480&q=80",
-  },
-  {
-    title: "Safe & nurturing",
-    desc: "Trained caregivers and clear allergy handling on your profile.",
-    img: "https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=480&q=80",
-  },
-  {
-    title: "Stay in the loop",
-    desc: "Progress updates and direct messages — only for your family.",
-    img: "https://images.unsplash.com/photo-1567748458415-2c823edac75b?w=480&q=80",
-  },
-];
 
 function categoryStyle(cat: string) {
   switch (cat) {
@@ -153,7 +136,7 @@ export default async function ParentDashboardPage() {
       <section className="mt-12">
         <h2 className="text-lg font-semibold text-slate-900">What we offer</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          {offerings.map((o) => (
+          {MARKETING_OFFERINGS.map((o) => (
             <article
               key={o.title}
               className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"

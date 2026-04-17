@@ -45,7 +45,7 @@ export function LoginForm({ registered }: { registered: boolean }) {
   };
 
   const inputClass =
-    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20";
+    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200";
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md flex-col justify-center px-4 py-12">
@@ -82,7 +82,7 @@ export function LoginForm({ registered }: { registered: boolean }) {
           <div className="flex justify-end">
             <Link
               href="/forgot-password"
-              className="text-sm font-medium text-violet-700 underline-offset-2 hover:text-violet-900 hover:underline"
+              className="text-sm font-medium text-slate-900 underline-offset-2 hover:underline"
             >
               Forgot password?
             </Link>
@@ -91,13 +91,13 @@ export function LoginForm({ registered }: { registered: boolean }) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full bg-[#6d28d9] py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#5b21b6] disabled:opacity-60"
+            className="w-full rounded-lg bg-slate-900 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-60"
           >
             {loading ? "Signing in..." : "Continue"}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">
-          <Link href="/" className="font-medium text-violet-700 hover:text-violet-900">
+          <Link href="/" className="font-medium text-slate-900 hover:underline">
             ← Back to website
           </Link>
         </p>

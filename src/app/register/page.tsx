@@ -40,11 +40,11 @@ export default function RegisterPage() {
   };
 
   const inputClass =
-    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20";
+    "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[var(--brand-mist)]/80 via-white to-[var(--brand-surface)] text-slate-900">
-      <header className="border-b border-violet-100 bg-white/90 px-4 py-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <header className="border-b border-slate-200 bg-white/95 px-4 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold text-slate-900">
           <BrandLogo className="h-9 w-9 shrink-0" />
           Daycare Pro
@@ -58,7 +58,7 @@ export default function RegisterPage() {
         <p className="mt-2 text-sm text-slate-600">Sign up with your email, then sign in anytime.</p>
         <form
           onSubmit={submit}
-          className="mt-6 space-y-4 rounded-2xl border border-violet-100 bg-white p-5 shadow-sm sm:mt-8 sm:p-6"
+          className="mt-6 space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:mt-8 sm:p-6"
         >
           <label className="block text-sm font-medium text-slate-700">
             Your name
@@ -97,19 +97,19 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full bg-[#6d28d9] py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#5b21b6] disabled:opacity-60"
+            className="w-full rounded-lg bg-slate-900 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-60"
           >
             {loading ? "Creating account…" : "Create account"}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-600">
           Already registered?{" "}
-          <Link href="/login" className="font-semibold text-violet-700 hover:text-violet-900">
+          <Link href="/login" className="font-semibold text-slate-900 hover:underline">
             Log in
           </Link>
         </p>
         <p className="mt-4 text-center">
-          <Link href="/" className="text-sm text-slate-500 hover:text-violet-800">
+          <Link href="/" className="text-sm text-slate-500 hover:text-slate-900">
             ← Back to website
           </Link>
         </p>

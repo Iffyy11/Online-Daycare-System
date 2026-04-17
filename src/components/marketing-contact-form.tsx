@@ -37,10 +37,10 @@ export function MarketingContactForm() {
   };
 
   const input =
-    "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-200";
+    "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200";
 
   return (
-    <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-[0_20px_60px_-24px_rgba(91,33,182,0.25)] sm:p-8">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <form onSubmit={submit}>
         <div className="space-y-4">
           <input
@@ -96,7 +96,7 @@ export function MarketingContactForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="mt-6 w-full rounded-full bg-[#6d28d9] py-3.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition hover:bg-[#5b21b6] disabled:opacity-60"
+          className="mt-6 w-full rounded-lg bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-60"
         >
           {status === "sending" ? "Sending…" : "Send"}
         </button>

@@ -71,5 +71,6 @@ export function mongoAuthTroubleshootingHint(message: string): string | undefine
     "3) If the password has @ # : / ? & = + % characters, URL-encode them (e.g. @ → %40, # → %23) in the URI only.",
     "4) Vercel: Project → Settings → Environment Variables → edit MONGODB_URI → Redeploy (no extra quotes around the whole URL).",
     "5) Local dev: after fixing .env.local, stop and restart npm run dev so Mongo can reconnect.",
+    "Why only some actions fail: while MONGODB_URI is set, failed Atlas auth still lets the app fall back to local or bundled JSON for reads (pages, login lookup, listing children), but saving always needs Mongo—add child, new bookings, register, etc. Local-only workaround: unset MONGODB_URI to use data/db.json for reads and writes.",
   ].join(" ");
 }

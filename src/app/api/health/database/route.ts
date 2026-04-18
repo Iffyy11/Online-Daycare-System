@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { readDb } from "@/lib/db";
-import { getMongoClient, isMongoEnabled, isMongoUriProvided } from "@/lib/mongo-client";
+import { getMongoClient, isMongoEnabled, isMongoUriProvided, mongoAuthTroubleshootingHint } from "@/lib/mongo-client";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +78,7 @@ export async function GET() {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
+    const authHint = mongoAuthTroubleshootingHint(message);
     return NextResponse.json(
       {
         ok: false,
@@ -86,7 +87,9 @@ export async function GET() {
         onVercel,
         database: databaseName,
         error: message,
-        hint: "Check the password in MONGODB_URI (replace <db_password>), IP access list in Atlas (allow 0.0.0.0/0 for testing or Vercel egress), and redeploy after changing env vars.",
+        hint:
+          authHint ??
+          "Check the password in MONGODB_URI (replace <db_password>), IP access list in Atlas (allow 0.0.0.0/0 for testing or Vercel egress), and redeploy after changing env vars.",
       },
       { status: 503 },
     );

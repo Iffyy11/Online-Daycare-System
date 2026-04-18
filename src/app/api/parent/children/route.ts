@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { pushChildMongo, readDb, writeDb } from "@/lib/db";
-import { isMongoEnabled } from "@/lib/mongo-client";
+import { isMongoEnabled, mongoAuthTroubleshootingHint } from "@/lib/mongo-client";
 import type { Child } from "@/lib/types";
 
 const childSchema = z.object({
@@ -68,20 +68,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ data: childToSave }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not save child.";
+    const authHint = mongoAuthTroubleshootingHint(message);
     const needsMongoHint =
+      authHint != null ||
       message.includes("Database not configured for Vercel") ||
       message.includes("MongoDB write failed on Vercel") ||
       message.includes("MONGODB_URI") ||
       /mongo(db)?/i.test(message);
 
     if (needsMongoHint) {
-      return NextResponse.json(
-        {
-          error: message,
-          hint: "Check MONGODB_URI in Vercel (or .env.local), Atlas IP access list (0.0.0.0/0 for serverless), database user password, then redeploy.",
-        },
-        { status: 503 },
-      );
+      const hint =
+        authHint ??
+        "Check MONGODB_URI in Vercel (or .env.local), Atlas IP access list (0.0.0.0/0 for serverless), database user password, then redeploy.";
+      return NextResponse.json({ error: message, hint }, { status: 503 });
     }
     console.error("POST /api/parent/children", error);
     return NextResponse.json({ error: message }, { status: 500 });

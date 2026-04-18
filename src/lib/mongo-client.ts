@@ -54,3 +54,17 @@ export async function getMongoDb() {
   const name = process.env.MONGODB_DB?.trim() || "daycare";
   return client.db(name);
 }
+
+/** Extra hint when Atlas rejects credentials (shown in API JSON for parents/operators). */
+export function mongoAuthTroubleshootingHint(message: string): string | undefined {
+  if (!/bad auth|authentication failed|not authorized on/i.test(message)) {
+    return undefined;
+  }
+  return [
+    "Atlas is rejecting the username/password inside MONGODB_URI (not your Atlas website login).",
+    "1) Atlas → Database Access → add a Database User (Password) or reset password → role: Read and write on your database (or readWriteAnyDatabase for dev).",
+    "2) Atlas → Connect your app → Drivers → copy the connection string → replace <password> with that database user’s password.",
+    "3) If the password has @ # : / ? & = + % characters, URL-encode them (e.g. @ → %40, # → %23) in the URI only.",
+    "4) Vercel: Project → Settings → Environment Variables → edit MONGODB_URI → Redeploy.",
+  ].join(" ");
+}

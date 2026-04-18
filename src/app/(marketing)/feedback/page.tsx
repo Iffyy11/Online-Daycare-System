@@ -18,16 +18,16 @@ export default async function FeedbackPage() {
   );
 
   return (
-    <main className="border-b border-slate-100 px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
+    <main className="border-b border-violet-100/80 bg-gradient-to-b from-[var(--brand-mist)]/30 via-white to-white px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
       <div className="mx-auto max-w-6xl">
         <section>
-          <h1 className="text-lg font-semibold text-slate-900 sm:text-xl">Parent feedback</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Parent feedback</h1>
+          <p className="mt-2 text-sm text-slate-600 sm:text-base">
             Messages from signed-in parents — real voices from our community, not sample quotes.
           </p>
           <p className="mt-2 text-sm text-slate-500">
             Have an account?{" "}
-            <Link href="/parent/feedback" className="font-medium text-slate-900 underline-offset-2 hover:underline">
+            <Link href="/parent/feedback" className="font-medium text-violet-700 underline-offset-2 hover:underline">
               Share your own feedback
             </Link>
             .
@@ -35,17 +35,17 @@ export default async function FeedbackPage() {
         </section>
 
         <section className="mt-10">
-          <h2 className="text-lg font-semibold text-slate-900">What families are saying</h2>
+          <h2 className="text-lg font-bold text-violet-900 sm:text-xl">What families are saying</h2>
           <p className="text-sm text-slate-600">
             Newest first — same card layout as your parent dashboard home.
           </p>
 
           {items.length === 0 ? (
             <ul className="mt-4">
-              <li className="rounded-xl border border-dashed border-slate-200 bg-slate-50/80 px-4 py-6 text-center text-sm text-slate-600">
+              <li className="rounded-2xl border border-dashed border-violet-200 bg-violet-50/50 px-4 py-6 text-center text-sm text-slate-600">
                 No feedback yet. When parents post from the portal, it will show up here for everyone.
                 <span className="mt-2 block">
-                  <Link href="/register" className="font-medium text-slate-900 hover:underline">
+                  <Link href="/register" className="font-semibold text-violet-700 hover:underline">
                     Register as a parent
                   </Link>{" "}
                   to join the community.
@@ -57,7 +57,7 @@ export default async function FeedbackPage() {
               {items.map((c, i) => (
                 <article
                   key={c.id}
-                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                  className="overflow-hidden rounded-2xl border border-violet-100 bg-white shadow-sm shadow-violet-500/5"
                 >
                   <div className="relative aspect-[5/3]">
                     <Image

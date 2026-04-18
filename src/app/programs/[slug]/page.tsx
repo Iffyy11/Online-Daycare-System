@@ -23,21 +23,21 @@ export default async function ProgramDetailPage({ params }: Props) {
   if (!program) notFound();
 
   return (
-    <main className="px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
+    <main className="bg-gradient-to-b from-[var(--brand-mist)]/30 via-white to-white px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
       <article className="mx-auto max-w-3xl">
         <Link
           href="/programs"
-          className="text-sm font-medium text-slate-900 underline-offset-2 hover:underline"
+          className="text-sm font-semibold text-violet-700 underline-offset-2 hover:underline"
         >
           ← All programs
         </Link>
 
         <header className="mt-6">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{program.title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-violet-950 sm:text-4xl">{program.title}</h1>
           <p className="mt-3 text-lg text-slate-600">{program.summary}</p>
-          <p className="mt-4 inline-flex flex-wrap items-baseline gap-2 rounded-2xl border border-emerald-200/80 bg-emerald-50/80 px-4 py-3 text-emerald-950">
+          <p className="mt-4 inline-flex flex-wrap items-baseline gap-2 rounded-2xl border border-violet-200/90 bg-violet-50/90 px-4 py-3 text-violet-950">
             <span className="text-sm font-semibold">From KES {formatKes(program.priceFromKes)}</span>
-            <span className="text-sm text-emerald-800/90">/ {program.priceUnitLabel}</span>
+            <span className="text-sm text-violet-800/90">/ {program.priceUnitLabel}</span>
           </p>
           <p className="mt-2 text-xs text-slate-500">
             Bookings use time-of-day hourly rates for the hours your child is on site; packages above are
@@ -45,7 +45,7 @@ export default async function ProgramDetailPage({ params }: Props) {
           </p>
         </header>
 
-        <div className="relative mt-8 aspect-[2/1] w-full overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+        <div className="relative mt-8 aspect-[2/1] w-full overflow-hidden rounded-2xl border border-violet-100 shadow-sm">
           <Image
             src={program.image}
             alt={program.imageAlt}
@@ -60,7 +60,7 @@ export default async function ProgramDetailPage({ params }: Props) {
           {program.highlights.map((h) => (
             <li
               key={h}
-              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-800 ring-1 ring-slate-200"
+              className="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-900 ring-1 ring-violet-100"
             >
               {h}
             </li>
@@ -93,18 +93,18 @@ export default async function ProgramDetailPage({ params }: Props) {
           ))}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm">
-          <p className="text-sm font-medium text-slate-800">Ready to enroll or ask a question?</p>
+        <div className="mt-12 rounded-[2rem] border border-violet-100 bg-white p-6 text-center shadow-[0_24px_60px_-30px_rgba(109,40,217,0.25)] sm:p-8">
+          <p className="text-sm font-semibold text-slate-800">Ready to enroll or ask a question?</p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link
               href="/register"
-              className="inline-flex rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+              className="inline-flex rounded-full bg-[#6d28d9] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#5b21b6]"
             >
               Parent sign up
             </Link>
             <Link
               href="/#contact"
-              className="inline-flex rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+              className="inline-flex rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-violet-200 hover:bg-violet-50/80"
             >
               Contact us
             </Link>

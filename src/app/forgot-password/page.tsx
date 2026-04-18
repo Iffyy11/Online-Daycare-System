@@ -12,8 +12,8 @@ export default function ForgotPasswordPage() {
   )}`;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white/95 px-4 py-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-b from-[var(--brand-mist)]/40 via-white to-[var(--brand-surface)] text-slate-900">
+      <header className="border-b border-violet-100/80 bg-white/90 px-4 py-4 backdrop-blur-md sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold text-slate-900">
           <BrandLogo className="h-9 w-9 shrink-0" />
           Daycare Pro
@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
       </header>
 
       <div className="mx-auto max-w-lg px-4 py-10 sm:px-6 sm:py-14">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:p-10">
+        <div className="rounded-2xl border border-violet-100 bg-white p-8 shadow-[0_24px_60px_-30px_rgba(109,40,217,0.2)] sm:p-10">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Reset your password</h1>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">
             Password reset is handled by our team. Send one email from the <strong>same address you used to sign up</strong>{" "}
@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
 
           <a
             href={mailto}
-            className="mt-8 flex w-full items-center justify-center rounded-lg bg-slate-900 px-5 py-4 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            className="mt-8 flex w-full items-center justify-center rounded-full bg-[#6d28d9] px-5 py-4 text-center text-sm font-semibold text-white shadow-md shadow-violet-500/25 transition hover:bg-[#5b21b6]"
           >
             Open email draft
           </a>
@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           <p className="mt-8 text-center">
-            <Link href="/login" className="text-sm font-semibold text-slate-900 hover:underline">
+            <Link href="/login" className="text-sm font-semibold text-violet-700 hover:underline">
               Back to log in
             </Link>
           </p>

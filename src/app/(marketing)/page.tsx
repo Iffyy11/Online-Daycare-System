@@ -3,7 +3,6 @@ import Link from "next/link";
 import { MarketingContactForm } from "@/components/marketing-contact-form";
 import { MarketingFooter } from "@/components/marketing-footer";
 import { MarketingHeader } from "@/components/marketing-header";
-import { MARKETING_OFFERINGS } from "@/lib/marketing-offerings";
 import { formatKes } from "@/lib/pricing";
 import { PROGRAMS } from "@/lib/programs-data";
 
@@ -128,75 +127,21 @@ export default function HomePage() {
             </ul>
           </section>
 
-          {/* Concerns */}
-          <section id="concerns" className="scroll-mt-24 pt-14 sm:pt-20">
-            <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
-              <div className="order-2 lg:order-1">
-                <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src="https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=900&q=80"
-                      alt="Children learning together at a table"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                  </div>
-                </article>
-              </div>
-              <div className="order-1 lg:order-2">
-                <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">
-                  Common daycare concerns, answered with clarity
-                </h2>
-                <ul className="mt-4 space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
-                  {[
-                    "Ratios, supervision, and how we document daily moments for families.",
-                    "Illness policies and what happens when your child needs extra comfort.",
-                    "How we introduce new caregivers and keep transitions gentle.",
-                  ].map((item) => (
-                    <li key={item} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-900" aria-hidden />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/#contact"
-                  className="mt-8 inline-flex rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
-                >
-                  Ask us anything
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          {/* What we offer — identical card pattern to parent dashboard */}
-          <section id="feedback" className="scroll-mt-24 pt-14 sm:pt-20">
-            <h2 className="text-lg font-semibold text-slate-900">What we offer</h2>
-            <p className="text-sm text-slate-600">
-              The same pillars we highlight in the parent portal — care, safety, and communication.
+          <section id="feedback" className="scroll-mt-24 border-t border-slate-200 pt-14 sm:pt-20">
+            <h2 className="text-lg font-semibold text-slate-900">Hear from families</h2>
+            <p className="mt-1 max-w-2xl text-sm text-slate-600">
+              Real notes from parents who use the portal — pricing for care options is in{" "}
+              <Link href="/#programs" className="font-medium text-slate-900 underline-offset-2 hover:underline">
+                Programs
+              </Link>{" "}
+              above.
             </p>
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
-              {MARKETING_OFFERINGS.map((o) => (
-                <article
-                  key={o.title}
-                  className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-                >
-                  <div className="relative aspect-[5/3]">
-                    <Image src={o.img} alt="" fill className="object-cover" sizes="33vw" />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-slate-900">{o.title}</h3>
-                    <p className="mt-1 text-sm text-slate-600">{o.desc}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-            <p className="mt-6 text-center text-sm text-slate-600">
-              <Link href="/feedback" className="font-medium text-slate-900 underline-offset-2 hover:underline">
-                Read feedback from enrolled parents →
-              </Link>
-            </p>
+            <Link
+              href="/feedback"
+              className="mt-4 inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50"
+            >
+              View parent feedback →
+            </Link>
           </section>
 
           {/* Contact */}

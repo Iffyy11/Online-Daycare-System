@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { formatNairobiDateTime } from "@/lib/nairobi-time";
 import { readDb } from "@/lib/db";
-import { MARKETING_OFFERINGS } from "@/lib/marketing-offerings";
 import { formatKes } from "@/lib/pricing";
+import { PROGRAMS } from "@/lib/programs-data";
 
 export const dynamic = "force-dynamic";
 
@@ -135,34 +135,43 @@ export default async function ParentDashboardPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-lg font-semibold text-slate-900">What we offer</h2>
+        <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">What we offer</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Typical published anchors — final fees are confirmed when you book.
+          Thoughtful routines for every age — tap a card for full details or{" "}
+          <Link href="/programs" className="font-medium text-slate-900 underline-offset-2 hover:underline">
+            browse all programs
+          </Link>
+          . Final fees are confirmed when you book.
         </p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          {MARKETING_OFFERINGS.map((o) => (
-            <article
-              key={o.title}
-              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-            >
-              <div className="relative aspect-[5/3]">
-                <Image src={o.img} alt="" fill className="object-cover" sizes="33vw" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-slate-900">{o.title}</h3>
-                <p className="mt-1 text-sm text-slate-600">{o.desc}</p>
-                {o.priceNote ? (
-                  <p className="mt-2 text-sm font-semibold text-slate-900">{o.priceNote}</p>
-                ) : o.priceFromKes != null && o.priceUnitLabel ? (
-                  <p className="mt-2 text-sm font-semibold text-slate-900">
-                    From KES {formatKes(o.priceFromKes)}{" "}
-                    <span className="font-normal text-slate-500">/ {o.priceUnitLabel}</span>
+        <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {PROGRAMS.map((p) => (
+            <li key={p.slug}>
+              <Link
+                href={`/programs/${p.slug}`}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
+              >
+                <div className="relative aspect-[5/3] w-full shrink-0">
+                  <Image
+                    src={p.image}
+                    alt={p.imageAlt}
+                    fill
+                    className="object-cover transition duration-300 group-hover:scale-[1.02]"
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-4">
+                  <h3 className="font-semibold text-slate-900">{p.title}</h3>
+                  <p className="mt-1 text-xs font-medium text-slate-700 sm:text-sm">
+                    From KES {formatKes(p.priceFromKes)}{" "}
+                    <span className="font-normal text-slate-500">/ {p.priceUnitLabel}</span>
                   </p>
-                ) : null}
-              </div>
-            </article>
+                  <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-slate-600">{p.summary}</p>
+                  <span className="mt-3 text-sm font-medium text-slate-900">Learn more →</span>
+                </div>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     </>
   );

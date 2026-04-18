@@ -373,7 +373,7 @@ function resolveParentUserIdForBooking(db: AppDatabase, booking: Booking): strin
   return user?.id ?? null;
 }
 
-async function pushChildMongo(child: Child): Promise<void> {
+export async function pushChildMongo(child: Child): Promise<void> {
   const mongo = await getMongoDb();
   const coll = mongo.collection<AppSnapshotDoc>(SNAPSHOT_COLLECTION);
   const exists = await coll.findOne({ _id: SNAPSHOT_ID }, { projection: { _id: 1 } });

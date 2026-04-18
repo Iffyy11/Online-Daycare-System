@@ -13,13 +13,24 @@ export function AddChildForm() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+    const ageNum = Number.parseInt(age, 10);
+    if (Number.isNaN(ageNum) || ageNum < 0 || ageNum > 18) {
+      setError("Please enter a valid age between 0 and 18.");
+      return;
+    }
     const res = await fetch("/api/parent/children", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, age: Number(age), allergies }),
+      body: JSON.stringify({
+        name: name.trim(),
+        age: ageNum,
+        allergies: allergies.trim() || "",
+      }),
     });
+    const payload = (await res.json().catch(() => ({}))) as { error?: string; hint?: string };
     if (!res.ok) {
-      setError("Could not add child.");
+      const detail = [payload.error, payload.hint].filter(Boolean).join(" ");
+      setError(detail || "Could not add child.");
       return;
     }
     setName("");

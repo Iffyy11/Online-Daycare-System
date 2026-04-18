@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { readDb, writeDb } from "@/lib/db";
+import { pushChildMongo, readDb, writeDb } from "@/lib/db";
+import { isMongoEnabled } from "@/lib/mongo-client";
+import type { Child } from "@/lib/types";
 
 const childSchema = z.object({
   name: z.string().min(2),
@@ -22,24 +24,64 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await getSession();
   if (!session || session.role !== "parent") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return NextResponse.json({ error: "Parents must be signed in to add a child." }, { status: 403 });
   }
 
-  const parsed = childSchema.safeParse(await request.json());
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const parsed = childSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid child data." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please enter a name (at least 2 characters) and an age from 0–18." },
+      { status: 400 },
+    );
   }
 
-  const db = await readDb();
-  const child = {
+  const allergyRaw = parsed.data.allergies?.trim() ?? "";
+  const allergies =
+    allergyRaw && allergyRaw.toLowerCase() !== "none" ? allergyRaw : undefined;
+
+  const child: Child = {
     id: `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     name: parsed.data.name.trim(),
     age: parsed.data.age,
     classroom: "Pending assignment",
-    allergies: parsed.data.allergies?.trim() || undefined,
+    allergies,
     parentUserId: session.userId,
   };
-  db.children.push(child);
-  await writeDb(db);
-  return NextResponse.json({ data: child }, { status: 201 });
+
+  try {
+    if (isMongoEnabled()) {
+      await pushChildMongo(child);
+    } else {
+      const db = await readDb();
+      db.children.push(child);
+      await writeDb(db);
+    }
+    return NextResponse.json({ data: child }, { status: 201 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not save child.";
+    if (
+      message.includes("Database not configured for Vercel") ||
+      message.includes("MongoDB write failed on Vercel")
+    ) {
+      return NextResponse.json(
+        {
+          error: message,
+          hint: "In Vercel: Project → Settings → Environment Variables → add MONGODB_URI, redeploy, then try again.",
+        },
+        { status: 503 },
+      );
+    }
+    console.error("POST /api/parent/children", error);
+    return NextResponse.json(
+      { error: message.includes("Mongo") ? message : "Could not save child. Please try again." },
+      { status: 500 },
+    );
+  }
 }

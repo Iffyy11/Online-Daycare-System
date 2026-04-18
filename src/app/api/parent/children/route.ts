@@ -54,34 +54,36 @@ export async function POST(request: Request) {
     allergies,
     parentUserId: session.userId,
   };
+  /** Strip undefined so Mongo/BSON and JSON file writes never carry explicit undefined keys. */
+  const childToSave = JSON.parse(JSON.stringify(child)) as Child;
 
   try {
     if (isMongoEnabled()) {
-      await pushChildMongo(child);
+      await pushChildMongo(childToSave);
     } else {
       const db = await readDb();
-      db.children.push(child);
+      db.children.push(childToSave);
       await writeDb(db);
     }
-    return NextResponse.json({ data: child }, { status: 201 });
+    return NextResponse.json({ data: childToSave }, { status: 201 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not save child.";
-    if (
+    const needsMongoHint =
       message.includes("Database not configured for Vercel") ||
-      message.includes("MongoDB write failed on Vercel")
-    ) {
+      message.includes("MongoDB write failed on Vercel") ||
+      message.includes("MONGODB_URI") ||
+      /mongo(db)?/i.test(message);
+
+    if (needsMongoHint) {
       return NextResponse.json(
         {
           error: message,
-          hint: "In Vercel: Project → Settings → Environment Variables → add MONGODB_URI, redeploy, then try again.",
+          hint: "Check MONGODB_URI in Vercel (or .env.local), Atlas IP access list (0.0.0.0/0 for serverless), database user password, then redeploy.",
         },
         { status: 503 },
       );
     }
     console.error("POST /api/parent/children", error);
-    return NextResponse.json(
-      { error: message.includes("Mongo") ? message : "Could not save child. Please try again." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

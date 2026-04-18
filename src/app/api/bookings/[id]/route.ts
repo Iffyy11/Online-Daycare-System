@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { ensureChildFromApprovedBooking, patchBookingMongo, readDb, writeDb } from "@/lib/db";
-import { isMongoEnabled } from "@/lib/mongo-client";
+import { isMongoEnabled, mongoAuthTroubleshootingHint } from "@/lib/mongo-client";
 import type { Booking } from "@/lib/types";
 
 const patchSchema = z
@@ -85,6 +85,23 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ id: strin
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown server error";
     console.error("Booking PATCH failed", { error: message });
+    const authHint = mongoAuthTroubleshootingHint(message);
+    const needsMongoHint =
+      authHint != null ||
+      message.includes("Database not configured for Vercel") ||
+      message.includes("MongoDB write failed on Vercel") ||
+      message.includes("MONGODB_URI") ||
+      /mongo(db)?/i.test(message);
+
+    if (needsMongoHint) {
+      const hint =
+        authHint ??
+        "Check MONGODB_URI in Vercel (or .env.local), Atlas IP access list, database user password, then redeploy.";
+      return NextResponse.json(
+        { error: `Could not update booking: ${message}`, hint },
+        { status: 503 },
+      );
+    }
     return NextResponse.json({ error: `Server error while updating booking: ${message}` }, { status: 500 });
   }
 }

@@ -14,6 +14,7 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [hint, setHint] = useState("");
 
   async function patch(body: Record<string, unknown>) {
     setBusy(true);
@@ -25,12 +26,13 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
         body: JSON.stringify(body),
       });
       if (!res.ok) {
-        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        const j = (await res.json().catch(() => ({}))) as { error?: string; hint?: string };
         if (res.status === 401) {
           setErr("Your session expired. Please log in again.");
           return;
         }
         setErr(j.error ?? `Update failed (${res.status})`);
+        if (j.hint) setHint(j.hint);
         return;
       }
       router.refresh();
@@ -55,6 +57,7 @@ export function AdminBookingActions({ bookingId, status, paymentStatus, compact 
   return (
     <div className="space-y-1">
       {err ? <p className="text-xs text-rose-600">{err}</p> : null}
+      {hint ? <p className="mt-1 text-xs leading-relaxed text-slate-600">{hint}</p> : null}
       <div className="flex flex-wrap gap-1.5">
         {status === "pending" ? (
           <>

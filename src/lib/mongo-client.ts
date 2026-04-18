@@ -44,7 +44,11 @@ export async function getMongoClient(): Promise<MongoClient> {
       serverSelectionTimeoutMS: 10_000,
       connectTimeoutMS: 10_000,
     });
-    global.__daycareMongoClientPromise = client.connect();
+    const connected = client.connect();
+    global.__daycareMongoClientPromise = connected.catch((err: unknown) => {
+      global.__daycareMongoClientPromise = undefined;
+      throw err;
+    });
   }
   return global.__daycareMongoClientPromise;
 }
@@ -65,6 +69,7 @@ export function mongoAuthTroubleshootingHint(message: string): string | undefine
     "1) Atlas → Database Access → add a Database User (Password) or reset password → role: Read and write on your database (or readWriteAnyDatabase for dev).",
     "2) Atlas → Connect your app → Drivers → copy the connection string → replace <password> with that database user’s password.",
     "3) If the password has @ # : / ? & = + % characters, URL-encode them (e.g. @ → %40, # → %23) in the URI only.",
-    "4) Vercel: Project → Settings → Environment Variables → edit MONGODB_URI → Redeploy.",
+    "4) Vercel: Project → Settings → Environment Variables → edit MONGODB_URI → Redeploy (no extra quotes around the whole URL).",
+    "5) Local dev: after fixing .env.local, stop and restart npm run dev so Mongo can reconnect.",
   ].join(" ");
 }
